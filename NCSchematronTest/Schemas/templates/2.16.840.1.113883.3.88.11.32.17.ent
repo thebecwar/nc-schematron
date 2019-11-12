@@ -1,0 +1,132 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.17 -->
+<!-- HITSP/C32 Encounters Module -->
+
+
+<!-- Errors Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.17-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.17"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+
+   <!-- Encounter Template ID Location -->
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.3"]
+             and self::cda:encounter[cda:templateId/@root="2.16.840.1.113883.10.20.1.21"]'>
+     Error: The HITSP/C32 templateId for Encounter entry (2.16.840.1.113883.3.88.11.32.17) is in the wrong location. A HITSP/C32 Encounter entry data element shall be represented as a CCD Encounter activity (2.16.840.1.113883.10.20.1.21) under a CCD Encounter section (2.16.840.1.113883.10.20.1.3). The C32 templateId for Encounter entry may optionally be included on the CCD Encounter activity element.
+     See Section 2.2.1.17 Table 2.2.1.17-2.
+   </assert>   
+   
+ </rule>
+
+
+<!-- New context for Encounter Entry --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.17"]'>
+
+   <!-- Table item 16.01 -->
+   <assert test='cda:id[@nullFlavor or @root]'>
+     Error: A HITSP/C32 Encounter entry data element shall contain a C32 Encounter ID element to identify this encounter instance. If a specific ID is unknown, a nullFlavor attribute with an appropriate value may be used. 
+     See Section 2.2.1.17 Table 2.2.1.17-2 Item 16.01.
+   </assert>
+
+   <!-- Table item 16.03 -->
+   <assert test='cda:text/cda:reference/@value or cda:code/cda:originalText/cda:reference/@value'>
+     Error: A HITSP/C32 Encounter entry data element shall contain a C32 Encounter Free Text Type element to describe the encounter type. The description may appear under cda:originalText in cda:code or under cda:text. In either case a cda:reference/@value is required to identify required text in the parent section.
+     See Section 2.2.1.17 Table 2.2.1.17-2 Item 16.03.
+   </assert>
+
+   <!-- Table item 16.04 -->
+   <assert test='cda:effectiveTime'>
+     Error: A HITSP/C32 Encounter entry data element shall contain a C32 Encounter DateTime element. 
+     See Section 2.2.1.17 Table 2.2.1.17-2 Item 16.04.
+   </assert>
+ 
+ </rule>
+
+</pattern>
+
+
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.17-violation'> 
+
+<!-- Rules that would be Errors if constraints are applied without C32 tempateIds -->
+
+ <!-- Set New context without templateIds -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.3"]
+             and self::cda:encounter[cda:templateId/@root="2.16.840.1.113883.10.20.1.21"]]'>
+
+   <!-- Table item 16.01 -->
+   <assert test='cda:id[@nullFlavor or @root]'>
+     Constraint Violation: A HITSP/C32 Encounter entry data element shall contain a C32 Encounter ID element to identify this encounter instance. If a specific ID is unknown, a nullFlavor attribute with an appropriate value may be used. 
+     See Section 2.2.1.17 Table 2.2.1.17-2 Item 16.01.
+   </assert>
+
+   <!-- Table item 16.03 -->
+   <assert test='cda:text/cda:reference/@value or cda:code/cda:originalText/cda:reference/@value'>
+     Constraint Violation: A HITSP/C32 Encounter entry data element shall contain a C32 Encounter Free Text Type element to describe the encounter type. The description may appear under cda:originalText in cda:code or under cda:text. In either case a cda:reference/@value is required to identify required text in the parent section.
+     See Section 2.2.1.17 Table 2.2.1.17-2 Item 16.03.
+   </assert>
+
+   <!-- Table item 16.04 -->
+   <assert test='cda:effectiveTime'>
+     Constraint Violation: A HITSP/C32 Encounter entry data element shall contain a C32 Encounter DateTime element. 
+     See Section 2.2.1.17 Table 2.2.1.17-2 Item 16.04.
+   </assert>
+ 
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.17-warning'>
+
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.3"]
+             and self::cda:encounter[cda:templateId/@root="2.16.840.1.113883.10.20.1.21"]]'> 
+
+   <!-- Table item 16.05 -->
+   <assert test='cda:participant/cda:assignedEntity'>
+     Warning: A HITSP/C32 Encounter Type should contain a C32 Encounter Provider data element. 
+     See Section 2.2.1.17 Table 2.2.1.17-2 Item 16.05.
+     NOTE: How does this compare with Section 2.2.1.17.2 Rule C32-[183], which defines a C32 Encounter Performer differently?
+   </assert>  
+
+   <!-- Rule C32-[203] -->
+   <assert test='cda:code[@code and @codeSystem="2.16.840.1.113883.6.12"]'>
+     Warning: A HITSP/C32 Encounter Type should have a code selected from the CPT-4 code system (2.16.840.1.113883.6.12) for E and M values. CHECK list! 
+     See Section 2.2.1.17.1 rule C32-[203].
+   </assert>
+
+   <!-- Rule C32-[204] -->
+   <assert test='cda:performer[@typeCode="PRF"]'>
+     Warning: A HITSP/C32 Encounter entry should contain one performer element (typeCode PRF) to identify the primary performer involved in the encounter. 
+     See Section 2.2.1.17.2 rule C32-[183?typo - should be 204?].
+   </assert>
+ 
+ </rule>
+
+</pattern>
+
+
+
+<!-- Notes Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.17-note'> 
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.3"]
+             and self::cda:encounter[cda:templateId/@root="2.16.840.1.113883.10.20.1.21"]]'>
+ 
+ </rule>
+
+</pattern>
+
+

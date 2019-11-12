@@ -1,0 +1,231 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.12 -->
+<!-- HITSP/C32 Comment Module -->
+
+
+<!-- Errors pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.12-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.12"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+
+   <assert test='self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.40"]'>
+     Error: The HITSP/C32 templateId for a Comments Module (2.16.840.1.113883.3.88.11.32.12) is in the wrong location. A HITSP/C32 Comments Module shall be represented as a CCD Comment act (2.16.840.1.113883.10.20.1.40). The C32 templateId for Comments Module may optionally be included on the CCD Comment act element.
+
+     See Section 2.2.1.12.
+   </assert>
+
+   <assert test='../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.5"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.10.20.1.26"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.6"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.7"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.10.20.1.27"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.8"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.10.20.1.24"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.9"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.10.20.1.53"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.10"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.11"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.13"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.10.20.1.17"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.14"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.15"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.16"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.10.20.1.31"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.3.88.11.32.17"]
+              or ../../cda:templateId[@root="2.16.840.1.113883.10.20.1.21"]
+              or ../../cda:observation[cda:code/@code="77386006" and cda:code/@codeSystem="2.16.840.1.113883.6.96"]'>
+     Error: A HITSP/C32 Comments Module (2.16.840.1.113883.3.88.11.32.12) shall be included only in a HITSP/C32 content module defined in one of the following sections: CCD Payers, CCD Alerts, CCD Problems, CCD Medications, CCD Advance Directives, CCD Immunizations, CCD Vital Signs, CCD Results, CCD Encounters, or under a HITSP/C32 Pregnancy Module. 
+     See Section 2.2.1.12.
+   </assert>
+
+ </rule>
+
+
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.12"
+                and ancestor::*[cda:templateId[@root="2.16.840.1.113883.3.88.11.32.5"
+                                            or @root="2.16.840.1.113883.10.20.1.26"
+                                            or @root="2.16.840.1.113883.3.88.11.32.6"
+                                            or @root="2.16.840.1.113883.3.88.11.32.7"
+                                            or @root="2.16.840.1.113883.10.20.1.27"
+                                            or @root="2.16.840.1.113883.3.88.11.32.8"
+                                            or @root="2.16.840.1.113883.10.20.1.24"
+                                            or @root="2.16.840.1.113883.3.88.11.32.9"
+                                            or @root="2.16.840.1.113883.10.20.1.53"
+                                            or @root="2.16.840.1.113883.3.88.11.32.10"
+                                            or @root="2.16.840.1.113883.3.88.11.32.11"
+                                            or @root="2.16.840.1.113883.3.88.11.32.13"
+                                            or @root="2.16.840.1.113883.10.20.1.17"
+                                            or @root="2.16.840.1.113883.3.88.11.32.14"
+                                            or @root="2.16.840.1.113883.3.88.11.32.15"
+                                            or @root="2.16.840.1.113883.3.88.11.32.16"
+                                            or @root="2.16.840.1.113883.10.20.1.31"
+                                            or @root="2.16.840.1.113883.3.88.11.32.17"
+                                            or @root="2.16.840.1.113883.10.20.1.21"]
+                               or self::cda:observation[cda:code/@code="77386006" and cda:code/@codeSystem="2.16.840.1.113883.6.96"]]]'>
+
+   <!-- Verify that a comment has an author -->
+   <assert test='ancestor-or-self::*/cda:author[1]'>
+     Error: A HITSP/C32 Comments module shall have an author, either defined directly in the comment or as the first author of a parent element.  
+     See Section 2.2.1.12 Table 2.2.1.12-2.
+   </assert>
+
+   <!-- Verify that the comment contains a C32 Free Text Comment data element -->
+   <assert test='cda:text'>
+     Error: A HITSP/C32 Comments module shall contain a C32 Free Text Comment data element.  
+     See Section 2.2.1.12 Table 2.2.1.12-2.
+   </assert>
+
+   <!-- Verify rule C32-[164] -->
+   <assert test='parent::cda:entryRelationship'>
+     Error: Comments shall be included in entries using an entryRelationship element.  
+     See Section 2.2.1.12.1 rule C32-[164].
+   </assert>
+
+   <!-- Verify rule C32-[165] -->
+   <assert test='parent::cda:entryRelationship[@typeCode="SUBJ"]'>
+     Error: The typeCode attribute of the entryRelationship shall be SUBJ.  
+     See Section 2.2.1.12.1 rule C32-[165].
+   </assert>
+
+   <!-- Verify rule C32-[166] -->
+   <assert test='parent::cda:entryRelationship[@inversionInd="true"]'>
+     Error: The inversionInd attribute of the entryRelationship shall be true.  
+     See Section 2.2.1.12.1 rule C32-[166].
+   </assert>
+
+   <!-- Verify rule C32-[167] -->
+   <assert test='cda:text/cda:reference/@value'>
+     Error: The Free Text Comment data element shall contain a reference element whose value attribute points to the text of the comment in the narrative portion of the parent CCD section.  
+     See Section 2.2.1.12.1 rule C32-[167].
+   </assert>
+
+   <!-- Verify rule C32-[168] and C32-[158] -->
+   <assert test='ancestor-or-self::*/cda:author[1]/cda:assignedAuthor/cda:assignedPerson/cda:name'>
+     Error: The name of the C32 Author shall be provided in the name element of the assignedPerson under the assignedAuthor.  
+     See Section 2.2.1.12 rule C32-[164] and Section 2.2.1.10.1 rule C32-[158].
+   </assert>
+
+   <!-- Verify rule C32-[168] and C32-[158] -->
+   <assert test='ancestor-or-self::*/cda:author[1]/cda:time'>
+     Error: The C32 Author data element shall contain an Author Time element.  
+     See Section 2.2.1.12 rule C32-[164] and Section 2.2.1.10.1 Table 2.2.1.10-2.
+   </assert>
+
+      
+ </rule>
+
+</pattern>
+
+   
+
+<!-- Warnings pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.12-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without C32 tempateIds -->
+
+ <!-- Set New context without C32 templateIds -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.10.20.1.40"
+                and ancestor::*[cda:templateId[@root="2.16.840.1.113883.3.88.11.32.5"
+                                            or @root="2.16.840.1.113883.10.20.1.26"
+                                            or @root="2.16.840.1.113883.3.88.11.32.6"
+                                            or @root="2.16.840.1.113883.3.88.11.32.7"
+                                            or @root="2.16.840.1.113883.10.20.1.27"
+                                            or @root="2.16.840.1.113883.3.88.11.32.8"
+                                            or @root="2.16.840.1.113883.10.20.1.24"
+                                            or @root="2.16.840.1.113883.3.88.11.32.9"
+                                            or @root="2.16.840.1.113883.10.20.1.53"
+                                            or @root="2.16.840.1.113883.3.88.11.32.10"
+                                            or @root="2.16.840.1.113883.3.88.11.32.11"
+                                            or @root="2.16.840.1.113883.3.88.11.32.13"
+                                            or @root="2.16.840.1.113883.10.20.1.17"
+                                            or @root="2.16.840.1.113883.3.88.11.32.14"
+                                            or @root="2.16.840.1.113883.3.88.11.32.15"
+                                            or @root="2.16.840.1.113883.3.88.11.32.16"
+                                            or @root="2.16.840.1.113883.10.20.1.31"
+                                            or @root="2.16.840.1.113883.3.88.11.32.17"
+                                            or @root="2.16.840.1.113883.10.20.1.21"]
+                               or self::cda:observation[cda:code/@code="77386006" and cda:code/@codeSystem="2.16.840.1.113883.6.96"]]]'>
+
+   <!-- Verify that a comment has an author -->
+   <assert test='ancestor-or-self::*/cda:author[1]'>
+     Constraint Violation: A HITSP/C32 Comments module shall have an author, either defined directly in the comment or as the first author of a parent element.  
+     See Section 2.2.1.12 Table 2.2.1.12-2.
+   </assert>
+
+   <!-- Verify that the comment contains a C32 Free Text Comment data element -->
+   <assert test='cda:text'>
+     Constraint Violation: A HITSP/C32 Comments module shall contain a C32 Free Text Comment data element.  
+     See Section 2.2.1.12 Table 2.2.1.12-2.
+   </assert>
+
+   <!-- Verify rule C32-[164] -->
+   <assert test='parent::cda:entryRelationship'>
+     Constraint Violation: Comments shall be included in entries using an entryRelationship element.  
+     See Section 2.2.1.12.1 rule C32-[164].
+   </assert>
+
+   <!-- Verify rule C32-[165] -->
+   <assert test='parent::cda:entryRelationship[@typeCode="SUBJ"]'>
+     Constraint Violation: The typeCode attribute of the entryRelationship shall be SUBJ.  
+     See Section 2.2.1.12.1 rule C32-[165].
+   </assert>
+
+   <!-- Verify rule C32-[166] -->
+   <assert test='parent::cda:entryRelationship[@inversionInd="true"]'>
+     Constraint Violation: The inversionInd attribute of the entryRelationship shall be true.  
+     See Section 2.2.1.12.1 rule C32-[166].
+   </assert>
+
+   <!-- Verify rule C32-[167] -->
+   <assert test='cda:text/cda:reference/@value'>
+     Constraint Violation: The Free Text Comment data element shall contain a reference element whose value attribute points to the text of the comment in the narrative portion of the parent CCD section.  
+     See Section 2.2.1.12.1 rule C32-[167].
+   </assert>
+
+   <!-- Verify rule C32-[168] and C32-[158] -->
+   <assert test='ancestor-or-self::*/cda:author[1]/cda:assignedAuthor/cda:assignedPerson/cda:name'>
+     Constraint Violation: The name of the C32 Author shall be provided in the name element of the assignedPerson under the assignedAuthor.  
+     See Section 2.2.1.12 rule C32-[164] and Section 2.2.1.10.1 rule C32-[158].
+   </assert>
+
+   <!-- Verify rule C32-[168] and C32-[158] -->
+   <assert test='ancestor-or-self::*/cda:author[1]/cda:time'>
+     Constraint Violation: The C32 Author data element shall contain an Author Time element.  
+     See Section 2.2.1.12 rule C32-[164] and Section 2.2.1.10.1 Table 2.2.1.10-2.
+   </assert>
+
+      
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+   
+
+<!-- Warnings pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.12-warning'>
+
+
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.12"]'>
+ </rule>
+
+</pattern>
+
+   
+
+<!-- Notes pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.12-note'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.12"]'>
+ </rule>
+
+</pattern>

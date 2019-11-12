@@ -1,0 +1,834 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.1 -->
+<!-- HITSP/C32 Summary Documents using HL7 CCD, Version 2.1 December 13, 2007 -->
+<!-- Formerly named: HITSP/C32 Registration and Medication History -->
+
+
+<!-- The HIPSP/C32 specification defines 17 template ids. However, the specification is not crystal clear about which C32 content module or which C32 data element each templateId identifies. By closely reading the text and by looking at all of the examples, it is possible to infer that the template ids correspond with the following HL7 CDA sections or entries. In many cases, the HITSP C32 templateId corresponds directly with the referenced CCD template id. -->
+
+<!--  Registration and Medication History (2.16.840.1.113883.3.88.11.32.1) See Section 2.2.1.1.
+      cda:ClinicalDocument[cda:templateId/@root="2.16.840.1.113883.10.20.1"] -->
+
+<!--  Language (2.16.840.1.113883.3.88.11.32.2) see Section 2.2.1.3.
+      cda:recordTarget/cda:patientRole/cda:patient/cda:languageCommunication -->
+
+<!--  Support (2.16.840.1.113883.3.88.11.32.3) see Section 2.2.1.4.
+      cda:patient/cda:guardian or cda:participant[@typeCode="IND"] -->
+
+<!--  Healthcare Provider (2.16.840.1.113883.3.88.11.32.4) see Section 2.2.1.5.
+      cda:ClinicalDocument/cda:documentationOf/cda:serviceEvent/cda:performer -->
+
+<!--  Insurance Payment Provider (2.16.840.1.113883.3.88.11.32.5) see Section 2.2.1.6.
+      cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]/cda:entryRelationship
+      /cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"] -->
+
+<!--  Allergy and Drug Sensitivities Module (2.16.840.1.113883.3.88.11.32.6) see Section 2.2.1.7.
+      cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]/cda:entry
+      /cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"] -->
+
+<!--  Conditions Module (2.16.840.1.113883.3.88.11.32.7) see Section 2.2.1.8.
+      cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"]/cda:entry
+      /cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"] -->
+
+<!--  Medications Administration Information (2.16.840.1.113883.3.88.11.32.8) see Section 2.2.1.9.
+      cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]/cda:entry
+      /cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"] -->
+
+<!--  Medication Information (2.16.840.1.113883.3.88.11.32.9) see Section 2.2.1.9.9. 
+      cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]/
+      cda:consumable/cda:manufacturedProduct[cda:templateId/@root="2.16.840.1.113883.10.20.1.53"] -->
+
+<!--  Type of Medication (2.16.840.1.113883.3.88.11.32.10) see Section 2.2.1.9.11.
+      cda:substanceAdministration/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation -->
+
+<!--  Order Information (2.16.840.1.113883.3.88.11.32.11) see Section 2.2.1.9.16.
+      cda:substanceAdministration/cda:entryRelationship[@typeCode="REFR"]/
+      cda:supply[@moodCode="INT" and cda:templateId/@root="2.16.840.1.113883.10.20.1.34"] -->
+
+<!--  Comment (2.16.840.1.113883.3.88.11.32.12) see Section 2.2.1.12.
+      cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.40"] -->
+
+<!--  Advance Directive (2.16.840.1.113883.3.88.11.32.13) see Section 2.2.1.13.    
+      cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.1"]/cda:entry/ 
+      cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.17"] -->
+
+<!--  Immunization (2.16.840.1.113883.3.88.11.32.14) see Section 2.2.1.14.
+      cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.6"]/cda:entry/
+      cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"] -->
+
+<!--  Vital Signs (2.16.840.1.113883.3.88.11.32.15) see Section 2.2.1.15.  
+      cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.16"]//
+      cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"] -->
+
+<!--  Results (2.16.840.1.113883.3.88.11.32.16) see Section 2.2.1.16.    
+      cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.14"]//
+      cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"] -->
+
+<!--  Encounter (2.16.840.1.113883.3.88.11.32.17) see Section 2.2.1.17.    
+      cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.3"]/cda:entry/
+      cda:encounter[cda:templateId/@root="2.16.840.1.113883.10.20.1.21"] -->
+
+<!--  The schematron conformance validation rules in this and other HITSP/C32 entity files assume the above relationships among C32 templateIds, C32 modules, C32 data elements, and CCD section or entry elements. -->
+
+
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.1-errors'>
+
+ <rule context='/'>
+
+   <!-- Verify that HITSP/C32 conformance is declared -->
+   <assert test='//cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"'>
+     Error: A CDA Document shall declare conformance to HITSP/C32 by including a templateId element with the root attribute set to the value 2.16.840.1.113883.3.88.11.32.1.
+     See Section 2.2.1.1 Rule C32-[1].
+   </assert>
+
+ </rule>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]'>
+
+   <!-- Verify that the template id is used on the appropriate type of object -->
+   <assert test='self::cda:ClinicalDocument'>
+     Error: HITSP/C32 shall be an HL7 CDA Clinical Document and the HITSP/C32 templateId (2.16.840.1.113883.3.88.11.32.1) shall appear on the root element.
+     See Section 2.2.1.1 Rule C32-[1].
+   </assert> 
+
+   <!-- Verify that the parent CCD templateId is also present. -->
+   <assert test='cda:templateId[@root="2.16.840.1.113883.10.20.1"]'>
+     Error: A HITSP/C32 document shall carry the template identifier for the ASTM/HL7 CCD Implementation Guide (2.16.840.1.113883.10.20.1) from which it is derived.
+     See Section 2.2.1.
+   </assert> 
+
+
+   <!-- Verify that C32 contains required Personal Information -->
+    
+   <assert test='count(./cda:recordTarget/cda:patientRole/cda:patient)=1'> 
+     <!-- Verify that the Patient element exists  -->
+     Error: HITSP/C32 shall contain Person Information for exactly one Patient.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.2 table 2.2.1.2-2.
+   </assert>
+
+
+   <!-- Verify that all required (R) modules are present - Table 2.2.1-2 -->
+   <!-- The following modules are no longer Required (as of V2.1) so 5 former rules are commented out. -->
+   <!--
+   
+   <assert test='cda:documentationOf/cda:serviceEvent/cda:performer'>
+     Error: HITSP/C32 shall contain at least one Healthcare Provider module (2.16.840.1.113883.3.88.11.32.4). The HITP/C32 templateId, if used, is carried on the performer element under a documentationOf serviceEvent in the ClinicalDocument. If no provider information is available, the assignedEntity element under the performer element may be left with empty or unknown (UNK) null value information.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.5.
+   </assert>    
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.9"]'> 
+     Error: HITSP/C32 shall contain a CCD Payers section (2.16.840.1.113883.10.20.1.9) that contains a summary of all Insurance Provider information. If no payment sources are provided, the reason shall be provided as free text in the narrative block (e.g. Not Insured, Payer Unknown, Meidcare Pending, et cetera) of the CCD Payors section.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.6.
+   </assert>
+   
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.2"]'> 
+     Error: HITSP/C32 shall contain a CCD Alerts section (2.16.840.1.113883.10.20.1.2) that contains a summary of all allergy and drug sensitivity information. At a minimum this section shall contain a summary listing of currently active and any relevant historical allergies and adverse reactions. The lack of any such information shall be asserted in the narrative block of the CCD Alerts section.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.7.
+   </assert>   
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.11"]'> 
+     Error: HITSP/C32 shall contain a CCD Problems section (2.16.840.1.113883.10.20.1.11) that contains a summary of all relevant clinical problems. At a minimum this summary may be limited to a brief list of serious major medical conditions that should always be disclosed even in many ancillary service department settings. The lack of any such information shall be asserted in the narrative block of the CCD Problems section.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.8.
+   </assert>   
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.8"]'> 
+     Error: HITSP/C32 shall contain a CCD Medications section (2.16.840.1.113883.10.20.1.8) that contains a summary of all current medications and pertinent medical history. At a minimum the currently active medications should be listed. If no medications are known then that fact shall be reported in the narrative block of the CCD Medications section.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.9.
+   </assert>
+
+   End of rules commented out -->
+
+ </rule>
+
+ <!-- Add additional rules for Requirements (R) of Section 2.2.1 -->
+
+   <!-- Section 2.2.1.2 Person Information Module --> 
+
+ <rule context='/cda:ClinicalDocument'>   
+
+   <assert test='cda:effectiveTime'>
+     Error: HITSP/C32 shall contain a Document Timestamp data element
+     See Table 2.2.1.2-2.
+   </assert>   
+
+   <assert test='cda:recordTarget/cda:patientRole'>
+     Error: HITSP/C32 shall contain a Patient Information data element.
+     See Table 2.2.1.2-2.
+   </assert>   
+
+   <assert test='cda:recordTarget/cda:patientRole/cda:id'>
+     Error: HITSP/C32 shall contain a Person ID data element for the Patient Role.
+     See Table 2.2.1.2-2.
+   </assert>   
+
+   <assert test='cda:recordTarget/cda:patientRole/cda:addr'>
+     Error: HITSP/C32 shall contain a Person Address data element for the Patient Role. Multiple addresses are possible to identify temporary addresses, vacation home addresses, work addresses, etc. Exactly one address for a patient should have a use attribute with a value set to HP (home permanent). Others may be set to HV (vacation) or WP (work place), etc.
+     See Table 2.2.1.2-2 and Section 2.2.1.2.2.
+   </assert>   
+
+   <assert test='cda:recordTarget/cda:patientRole/cda:telecom'>
+     Error: HITSP/C32 shall contain a Person Phone/Email/URL data element for the Patient Role. Multiple telecom instances are used to record multiple telephone numbers, Fax numbers, email addresses, etc. The Use code on telecom is used to indicate the following: HP (home phone), HV (vacation home phone), WP (work phone), MC (mobile phone), etc. Telephone numbers shall be represented in international form, e.g. tel:+1-ddd-ddd-dddd;ext=dddd for U.S. numbers. Hyphens and parentheses are ignored. Email addresses shall use the mailto: URL scheme from RFC-2368. 
+     See Table 2.2.1.2-2 and Section 2.2.1.2.3.
+   </assert>   
+
+   <assert test='cda:recordTarget/cda:patientRole/cda:patient'>
+     Error: HITSP/C32 shall contain a Personal Information data element for the Patient Role.
+     See Table 2.2.1.2-2.
+   </assert>   
+
+   <assert test='cda:recordTarget/cda:patientRole/cda:patient/cda:name'>
+     Error: HITSP/C32 shall contain a Person Name data element for the Patient.
+     See Table 2.2.1.2-2.
+   </assert>   
+
+   <assert test='cda:recordTarget/cda:patientRole/cda:patient/cda:administrativeGenderCode'>
+     Error: HITSP/C32 shall contain a Person Gender data element for the Patient.
+     See Table 2.2.1.2-2.
+   </assert>   
+
+   <assert test='cda:recordTarget/cda:patientRole/cda:patient/cda:birthTime'>
+     Error: HITSP/C32 shall contain a Person Date of Birth data element for the Patient.
+     See Table 2.2.1.2-2.
+   </assert>
+
+
+ </rule>
+
+   <!-- Section 2.2.1.2.1 Person Name Constraints --> 
+
+ <rule context='/cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient'>   
+
+   <assert test='cda:name/cda:family'>
+     Error: HITSP/C32 shall contain a Patient Family name part.
+     See Section 2.2.1.2.1 rule C32-[2].
+   </assert>      
+
+   <assert test='cda:name/cda:given'>
+     Error: HITSP/C32 shall contain a Patient Given name part.
+     See Section 2.2.1.2.1 rule C32-[3].
+   </assert>
+
+   <assert test='count(cda:name[@use="L"])=0 or count(cda:name[@use="L"])=1'>
+     Error: At most one C32 Patient Name shall have a use element set to legal (L).
+     See Section 2.2.1.2.1 rule C32-[6].
+   </assert>
+
+
+ </rule>
+
+
+   <!-- Section 2.2.1.2.2 Address Constraints for Patient Role -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:addr'>
+
+   <assert test='@nullFlavor or (cda:country | cda:state | cda:city | cda:streetAddressLine | cda:postalCode)'>
+     Error: Each HITSP/C32 Patient address part shall be identified using the streetAddressLine, city, state, postalCode and country tags. 
+     See Section 2.2.1.2.2 rule C32-[12].
+   </assert> 
+
+   <assert test='count(cda:streetAddressLine) &lt; 5'>
+     Error: Each HITSP/C32 Patient address shall contain no more than 4 streetAddressLine elements. 
+     See Section 2.2.1.2.2 rule C32-[14].
+   </assert>   
+
+   <assert test='not(cda:country) or cda:country[string-length()=2]'>
+     Error: Each HITSP/C32 Patient Country address part shall be recorded using ISO-3166-1 2-character codes. CHECK list.
+     See Section 2.2.1.2.2 rule C32-[22].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.3 Person Phone/Email Constraints -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:telecom'>
+  
+   <assert test='@nullFlavor or @value[substring(string(),1,5)="tel:+"] 
+                             or @value[substring(string(),1,7)="mailto:"]
+                             or @value[substring(string(),1,4)="fax:"]
+                             or @value[substring(string(),1,5)="http:"]'>
+     Error: Each HITSP/C32 Patient Phone/Email element shall contain a telephone number using the tel: URL scheme, an Email address using the mailto: URL scheme, a Fax telephone using fax: URL scheme, or an http: URL referencing other contact information. US phone numbers should be of form tel:+1-ddd-ddd-dddd;ext=dddd where hyphens and parentheses are optional and are not considered significant in comparisons.
+     See Section 2.2.1.2.3 rules C32-[23], C32-[24], C32-[25] and C32-[31].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.4 Gender Constraints --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:administrativeGenderCode'>   
+
+   <assert test='(@codeSystem="2.16.840.1.113883.5.1" and (@code="F" or @code="M" or @code="UN"))'>
+     Error: A HITSP/C32 Patient Gender shall be coded using the HL7 AdministrativeGenderCode code system (2.16.840.1.113883.5.1). The codes are: Male (M), Female (F), Undifferentiated (UN).
+     See Section 2.2.1.2.4 rule C32-[32].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.5 Marital Status Constraints --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:maritalStatusCode'>   
+
+   <assert test='(@code and @codeSystem="2.16.840.1.113883.5.2") or @nullFlavor or cda:originalText'>
+     Error: A HITSP/C32 Marital Status, if known, shall be coded using the HL7 MaritalStatus code system (2.16.840.1.113883.5.2). CHECK code list.
+     See Section 2.2.1.2.5 rule C32-[33].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.6 Race Constraints --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:raceCode'>   
+
+   <assert test='(@code and @codeSystem="2.16.840.1.113883.6.238") or @nullFlavor or cda:originalText'>
+     Error: A HITSP/C32 Race, if known, shall be coded using the CDC Race and Ethnicity code system (2.16.840.1.113883.6.238). CHECK code list.
+     See Section 2.2.1.2.6 rule C32-[34].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.7 Ethnicity Constraints -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:ethnicGroupCode'>   
+
+   <assert test='(@code and @codeSystem="2.16.840.1.113883.6.238") or @nullFlavor or cda:originalText'>
+     Error: A HITSP/C32 Ethnicity Group, if known, shall be coded using the CDC Race and Ethnicity code system (2.16.840.1.113883.6.238). CHECK code list.
+     See Section 2.2.1.2.7 rule C32-[36].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.8 Religious Affiliation Constraints -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:religiousAffiliationcode'>   
+
+   <assert test='(@code and @codeSystem="2.16.840.1.113883.5.1076") or @nullFlavor or cda:originalText'>
+     Error: A HITSP/C32 Religious Affiliation, if known, shall be coded using the HL7 Religious Affiliation code system (2.16.840.1.113883.5.1076). 
+     See Section 2.2.1.2.8 rule C32-[38].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.11 Information Source module -->
+
+ <rule context='*[cda:author]'>   
+
+   <assert test='cda:author[1]/cda:time'>
+     Error: A HITSP/C32 Document, Section or Entry First Author shall contain a C32 Author Time element. 
+     See Section 2.2.1.11 table 2.2.1.11-2.
+   </assert>
+
+ </rule>   
+
+ <rule context='*[self::cda:author]'>
+
+   <assert test='cda:assignedAuthor//cda:name[* or @nullFlavor or string-length(normalize-space()) > 2]'>
+     Error: A HITSP/C32 Document, Section or Entry Author shall contain a non-empty C32 Author Name element. The Name may be under assignedAuthor/assignedPerson or it may be under assignedAuthor/representedOrganization, or both.
+     See Section 2.2.1.11 table 2.2.1.11-2 and rule c32-[162].
+   </assert>
+
+ </rule>
+
+ <rule context='*[self::cda:externalDocument][parent::cda:reference]'>   
+
+   <assert test='cda:id'>
+     Error: A HITSP/C32 Section or Entry External Reference shall contain a C32 Reference document ID element. 
+     See Section 2.2.1.11 table 2.2.1.11-2.
+   </assert>
+
+ </rule>
+
+ <rule context='*[self::cda:informant]'>   
+
+   <assert test='//cda:name[* or @nullFlavor or string-length(normalize-space()) > 2] or //sdtc:patient'>
+     Error: A HITSP/C32 Section or Entry Informant shall contain a C32 Information source Name element. The Name may be under assignedEntity/assignedPerson, assignedEntity/representedOrganization, or relatedEntity/relatedPerson, or the informant may be the patient.
+     See Section 2.2.1.11 table 2.2.1.11-2 and rules C32-[162] and C32-[163].
+   </assert>
+
+ </rule>
+
+</pattern>
+
+
+
+<!-- Pattern for Warnings -->
+
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.1-warning'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]'>
+
+   <assert test='cda:documentationOf/cda:serviceEvent/cda:performer/cda:templateId[@root="2.16.840.1.113883.3.88.11.32.4"]'> 
+     Warning: If a HITSP/C32 document contains documentationOf a serviceEvent with a performer element, then that performer element may optionally include the HITSP/C32 template ID for C32 Performer (2.16.840.1.113883.3.88.11.32.4). 
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.3
+   </assert>
+
+<!-- The following 4 rules are commented out because (in version 2.1) CCD sections for Payment Providers, 
+      Allergies, Conditions, and Medications are no longer required in a HITSP/C32 document.  
+      The rules have been copied to occur as Notes below instead. -->
+
+<!--
+
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.26"]
+                 [ancestor::cda:act/cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]'>
+     Warning: HITSP/C32 should contain at least one C32 Payment Providers data element represented as a CCD Policy Activity entry (2.16.840.1.113883.10.20.1.26) under a CCD Coverage Activity entry (2.16.840.1.113883.10.20.1.20) in a CCD Payors section (2.16.840.1.113883.10.20.1.9). The C32 templateId (2.16.840.1.113883.3.88.11.32.5) may or may not be present. The lack of any such information shall be asserted in the narrative block of the CCD Payors section.
+     See HITSP/C32 Table 2.2.1-2 and Table 4.2.1.3.1.5-2.
+   </assert>   
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.27"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]'> 
+     Warning: HITSP/C32 should contain at least one HITSP/C32 Allergy and Drug Sensitivity module represented as a CCD Problem Act event (2.16.840.1.113883.10.20.1.27) in a CCD Alerts section (2.16.840.1.113883.10.20.1.2). The C32 templateId (2.16.840.1.113883.3.88.11.32.6) may or may not be present. The lack of any such information shall be asserted in the narrative block of the CCD Alerts section.
+     See HITSP/C32 Table 2.2.1-2 and Table 2.2.1.6-2.
+   </assert>
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.27"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.11"]'>
+     Warning: HITSP/C32 should contain at least one HITSP/C32 Conditions Problem Entry represented as a CCD Problem Act (2.16.840.1.113883.10.20.1.27) in a CCD Problems section (2.16.840.1.113883.10.20.1.11). The C32 templateId (2.16.840.1.113883.3.88.11.32.7) may or may not be present. The lack of any such information shall be asserted in the narrative block of the CCD Problems section.
+     See HITSP/C32 Table 2.2.1-2 and Table 2.2.1.7-2.
+   </assert>
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.24"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]'> 
+     Warning: HITSP/C32 should contain at least one HITSP/C32 Medications Administration Information element represented as a CCD Medication Activity (2.16.840.1.113883.10.20.1.24) entry under a CCD Medications section (2.16.840.1.113883.10.20.1.8). The C32 templateId (2.16.840.1.113883.3.88.11.32.8) may or may not be present. The lack of any such information shall be asserted in the narrative block of the CCD Medications section.
+     See HITSP/C32 Table 2.2.1-2.
+   </assert>
+
+-->
+
+<!-- End of rules commented out! -->
+
+   
+   <assert test='./cda:recordTarget/cda:patientRole/cda:patient/cda:languageCommunication'> 
+     <!-- Determine if Language Spoken information is present for the patient -->
+     Warning: HITSP/C32 should include C32 Language Spoken information when known for the patient. Multiple Language Spoken modules are permitted. The C32 templateId (2.16.840.1.113883.3.88.11.32.2) may or may not be present in the languageCommunication elements.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.2
+   </assert>
+   
+   <assert test='./cda:participant[@typeCode = "IND"]'> 
+     <!-- Determine if Support information is present for family, relatives, contacts -->
+     Warning: HITSP/C32 should include C32 Support information for family, relatives, caregivers, and contacts for healthcare decisions related to the patient. Multiple Support modules are permitted. The C32 templateId (2.16.840.1.113883.3.88.11.32.3) may or may not be present in the cda:participant elements.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.3
+   </assert> 
+
+ </rule>
+
+ 
+ <!-- Add Warnings for CCD Elements that may or may not contain HITPSP/C32 template IDs -->
+
+
+ <rule context='/cda:ClinicalDocument/cda:participant[@typeCode="IND"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.3"]'> 
+     Warning: If a HITSP/C32 document contains a participation element with the typeCode attribute set to "IND", then that participation element may optionally include the HITSP/C32 template ID for Support (2.16.840.1.113883.3.88.11.32.3). 
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.3
+   </assert>
+ </rule>
+
+ <rule context='/cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient/cda:guardian'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.3"]'> 
+     Warning: If a HITSP/C32 document contains a Guardian element for a patient, then that guardian element may optionally include the HITSP/C32 template ID for Support (2.16.840.1.113883.3.88.11.32.3). 
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.3
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]
+                 [ancestor::cda:act/cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.5"]'>
+     Warning: If a HITSP/C32 document contains a CCD Policy Activity act (2.16.840.1.113883.10.20.1.26) under a CCD Coverage Activity act (2.16.840.1.113883.10.20.1.20) under a CCD Payors section (2.16.840.1.113883.10.20.1.9), then that CCD Policy Activity may optionally include the HITSP/C32 template ID for Insurance Payment Provider (2.16.840.1.113883.3.88.11.32.5).
+     See HITSP/C32 Section 2.2.1.5 and Section 2.2.1.5.1.
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.6"]'>
+     Warning: If a HITSP/C32 document contains a CCD Problem act (2.16.840.1.113883.10.20.1.27) under a CCD Alerts section (2.16.840.1.113883.10.20.1.2), then that CCD Problem act may optionally include the HITSP/C32 template ID for Allergy and Drug Sensitivities Module (2.16.840.1.113883.3.88.11.32.6).  
+     See HITSP/C32 Section 2.2.1.6 and Section 2.2.1.6.1.
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.11"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.7"]'>
+     Warning: If a HITSP/C32 document contains a CCD Problem act (2.16.840.1.113883.10.20.1.27) under a CCD Problems section (2.16.840.1.113883.10.20.1.11), then that CCD Problem act may optionally include the HITSP/C32 template ID for Conditions Module (2.16.840.1.113883.3.88.11.32.7).
+     See HITSP/C32 Section 2.2.1.7 and Section 2.2.1.7.3.
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.8"]'>
+     Warning: If a HITSP/C32 document contains a CCD Medication Activity act (2.16.840.1.113883.10.20.1.24) under a CCD Medications section (2.16.840.1.113883.10.20.1.8), then that CCD Medication Activity act (i.e. substanceAdministration) may optionally include the HITSP/C32 template ID for Medications Administration Information (2.16.840.1.113883.3.88.11.32.8).
+     See HITSP/C32 Section 2.2.1.8 Table 2.2.1.8-2 and Section 2.2.1.8.1.
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:observation]
+                 [parent::cda:entryRelationship/@typeCode="SUBJ"]
+                 [parent::*[parent::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.10"]'>
+     Warning: If a HITSP/C32 document contains a cda:observation under an entryRelationship of type (SUBJ) under a CCD Medication Activity act (2.16.840.1.113883.10.20.1.24) under a CCD Medications section (2.16.840.1.113883.10.20.1.8), then that cda:observation may optionally include the HITSP/C32 template ID for Type of Medication (2.16.840.1.113883.3.88.11.32.10).
+     See HITSP/C32 Section 2.2.1.8 Table 2.2.1.8-2 and Section 2.2.1.8.11.
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:supply[@moodCode="INT"]]
+                 [parent::cda:entryRelationship/@typeCode="REFR"]
+                 [parent::*[parent::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.11"]'>
+     Warning: If a HITSP/C32 document contains a cda:supply in request (INT) mood under an entryRelationship of type (REFR) under a CCD Medication Activity act (2.16.840.1.113883.10.20.1.24) under a CCD Medications section (2.16.840.1.113883.10.20.1.8), then that cda:supply may optionally include the HITSP/C32 template ID for Order Information (2.16.840.1.113883.3.88.11.32.11).
+     See HITSP/C32 Section 2.2.1.8 Table 2.2.1.8-2 and Section 2.2.1.8.16.
+   </assert>
+ </rule>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.10.20.1.40"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.12"]'>
+     Warning: If a HITSP/C32 document contains a CCD Comment entry (2.16.840.1.113883.10.20.1.40), then that entry may optionally include the HITSP/C32 template ID for the Comments Module (2.16.840.1.113883.3.88.11.32.12).
+     See HITSP/C32 Section 2.2.1.12.
+   </assert>
+ </rule>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.10.20.1.17"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.13"]'>
+     Warning: If a HITSP/C32 document contains a CCD Advance Directives observation (2.16.840.1.113883.10.20.1.17), then that observation may optionally include the HITSP/C32 template ID for Advance Directives (2.16.840.1.113883.3.88.11.32.13).
+     See HITSP/C32 Section 2.2.1.13
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.6"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.14"]'>
+     Warning: If a HITSP/C32 document contains a CCD Medication Activity act (2.16.840.1.113883.10.20.1.24) under a CCD Immunizations section (2.16.840.1.113883.10.20.1.6), then that CCD Medication Activity act (i.e. substanceAdministration) may optionally include the HITSP/C32 template ID for Immunization Event Entry (2.16.840.1.113883.3.88.11.32.14).
+     See HITSP/C32 Section 2.2.1.14.
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.16"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.15"]'>
+     Warning: If a HITSP/C32 document contains a CCD Result Observation (2.16.840.1.113883.10.20.1.31) under a CCD Vital Signs section (2.16.840.1.113883.10.20.1.16), then that CCD Result Observation may optionally include the HITSP/C32 template ID for Vital Signs Result module (2.16.840.1.113883.3.88.11.32.15).
+     See HITSP/C32 Section 2.2.1.15.
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.14"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.16"]'>
+     Warning: If a HITSP/C32 document contains a CCD Result Observation (2.16.840.1.113883.10.20.1.31) under a CCD Results section (2.16.840.1.113883.10.20.1.14), then that CCD Result Observation may optionally include the HITSP/C32 template ID for Result module (2.16.840.1.113883.3.88.11.32.16).
+     See HITSP/C32 Section 2.2.1.16.
+   </assert>
+ </rule>
+
+ <rule context='*[self::cda:encounter[cda:templateId/@root="2.16.840.1.113883.10.20.1.21"]]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.3"]'>
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.17"]'>
+     Warning: If a HITSP/C32 document contains a CCD Encounter Activity (2.16.840.1.113883.10.20.1.21) under a CCD Encounters section (2.16.840.1.113883.10.20.1.3), then that CCD Encounter Activity may optionally include the HITSP/C32 template ID for Encounter module (2.16.840.1.113883.3.88.11.32.17).
+     See HITSP/C32 Section 2.2.1.17.
+   </assert>
+ </rule>
+
+
+
+ <!-- Add additional rules for Warnings (R2) from Section 2.2.1 -->
+
+   <!-- Section 2.2.1.2 Person Information Module --> 
+
+ <rule context='/cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient'>   
+
+   <assert test='cda:maritalStatusCode'>
+     Warning: HITSP/C32 should contain a Marital Status data element for the Patient.
+     See Table 2.2.1.2-2.
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.1 Person Name Constraints --> 
+
+ <rule context='/cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient/cda:name'>   
+
+   <assert test='cda:given'>
+     Warning: HITSP/C32 Patient Name should contain one or more patient Given name parts. The first name should be in the first given instance. The middle name or initial, if any, should be in the second given instance.
+     See Section 2.2.1.2.1 rules C32-[2], C32-[3], C32-[4].
+   </assert>   
+
+   <assert test='cda:given[2] or cda:prefix or cda:suffix or cda:delimiter'>
+     Warning: HITSP/C32 Patient Name should contain other name parts. Name parts within a name shall be ordered in proper display order.
+     See Section 2.2.1.2.1 rules C32-[2], C32-[5].
+   </assert>
+
+   <assert test='../cda:name[@use="L"]'>
+     Warning: The legal name of the patient should be identified with the use attribute set to L.
+     See Section 2.2.1.2.1 rule C32-[6].
+   </assert>
+
+   <assert test='../cda:name[cda:family[@qualifier="BR"] or cda:family[@qualifier="AD"] 
+                           or cda:given[@qualifier="BR"] or cda:given[@qualifier="AD"]]'>
+     Warning: Family or given Patient Name parts that are birth or adoption parts should be qualified as such by setting a qualifier attribute to BR (birth name) or AD (adoption name). 
+     See Section 2.2.1.2.1 rules C32-[9].
+   </assert>
+
+   <assert test='../cda:name[cda:given[@qualifier="CL"] or cda:family[@qualifier="CL"]]'>
+     Warning: Patient Name parts that are given or family name parts should be qualified as preferred names by setting a qualifier attribute to CL (patient preferred name). 
+     See Section 2.2.1.2.1 rules C32-[10].
+   </assert>
+
+   <assert test='not(cda:suffix[not(@qualifier)] or cda:prefix[not(@qualifier)])'>
+     Warning: Patient Name parts that are academic title name parts should be presented as prefix or suffix parts with the qualifier attribute set to AC (academic title). 
+     See Section 2.2.1.2.1 rules C32-[11].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.2 Address Constraints -->
+   <!-- No New Requirements or New Rule Context --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]'>
+ ADD ASSERTS
+ </rule>
+
+   <!-- Section 2.2.1.2.3 Person Telecom Constraints -->
+   <!-- No New Requirements or New Rule Context --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]'>
+ ADD ASSERTS
+ </rule>
+ 
+   <!-- Section 2.2.1.2.5 Marital Status Constraints --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:maritalStatusCode'>   
+
+   <assert test='@nullFlavor or (@code and @codeSystem="2.16.840.1.113883.5.2")'>
+     Warning: A HITSP/C32 Marital Status should be coded using a code from the HL7 MaritalStatus code system (2.16.840.1.113883.5.2). CHECK code list.
+     See Section 2.2.1.2.5 rule C32-[33].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.6 Race Constraints --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:raceCode'>   
+
+   <assert test='@nullFlavor or (@code and @codeSystem="2.16.840.1.113883.6.238")'>
+     Warning: A HITSP/C32 Race should be coded using the CDC Race and Ethnicity code system (2.16.840.1.113883.6.238). CHECK code list. 
+     See Section 2.2.1.2.6 rule C32-[34].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.7 Ethnicity Constraints -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:ethnicGroupCode'>   
+
+   <assert test='@nullFlavor or (@code and @codeSystem="2.16.840.1.113883.6.238")'>
+     Warning: A HITSP/C32 Ethnicity Group should be coded using the CDC Race and Ethnicity code system (2.16.840.1.113883.6.238). CHECK code list. 
+     See Section 2.2.1.2.7 rule C32-[36].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.8 Religious Affiliation Constraints -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:religiousAffiliationCode'>   
+
+   <assert test='@nullFlavor or (@code and @codeSystem="2.16.840.1.113883.5.1076")'>
+     Warning: A HITSP/C32 Religius Affiliation should be coded using the HL7 Religious Affiliation code system (2.16.840.1.113883.5.1076). CHECK code list. 
+     See Section 2.2.1.2.8 rule C32-[38].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.11 Information Source module -->
+
+ <rule context='*[self::cda:author][not(self::cda:author[1])]'> 
+
+   <assert test='cda:assignedAuthor/cda:name'>
+     Warning: A HITSP/C32 Section or Entry Secondary Author should contain a C32 Author Name element. 
+     See Section 2.2.1.11 table 2.2.1.11-2.
+   </assert>
+
+ </rule>
+
+</pattern>
+
+
+
+<!-- Pattern for Notes -->
+
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.1-note'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]'>
+
+   <assert test='cda:documentationOf/cda:serviceEvent/cda:performer'>
+     Note: HITSP/C32 may contain one or more Healthcare Provider modules (2.16.840.1.113883.3.88.11.32.4). The HITP/C32 templateId (2.16.840.1.113883.3.88.11.32.4), if used, is carried on the performer element under a documentationOf serviceEvent in the ClinicalDocument. If no provider information is available, the assignedEntity element under the performer element may be left with empty or unknown (UNK) null value information.
+     See HITSP/C32 Table 2.2.1-2 and Section 2.2.1.5.
+   </assert>    
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.26"]
+                 [ancestor::cda:act/cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]'>
+     Note: HITSP/C32 may contain a C32 Payment Providers data element represented as a CCD Policy Activity entry (2.16.840.1.113883.10.20.1.26) under a CCD Coverage Activity entry (2.16.840.1.113883.10.20.1.20) in a CCD Payors section (2.16.840.1.113883.10.20.1.9). The C32 templateId (2.16.840.1.113883.3.88.11.32.5) may optionally be included. The lack of any such information may be asserted in the narrative block of the CCD Payors section.
+     See HITSP/C32 Table 2.2.1-2 and Table 4.2.1.3.1.5-2.
+   </assert>   
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.27"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]'> 
+     Note: HITSP/C32 may contain a HITSP/C32 Allergy and Drug Sensitivity module represented as a CCD Problem Act event (2.16.840.1.113883.10.20.1.27) in a CCD Alerts section (2.16.840.1.113883.10.20.1.2). The C32 templateId (2.16.840.1.113883.3.88.11.32.6) may optionally be included. The lack of any such information may be asserted in the narrative block of the CCD Alerts section.
+     See HITSP/C32 Table 2.2.1-2 and Table 2.2.1.6-2.
+   </assert>
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.27"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.11"]'>
+     Note: HITSP/C32 may contain a HITSP/C32 Conditions Problem Entry represented as a CCD Problem Act (2.16.840.1.113883.10.20.1.27) in a CCD Problems section (2.16.840.1.113883.10.20.1.11). The C32 templateId (2.16.840.1.113883.3.88.11.32.7) may optionally be included. The lack of any such information may be asserted in the narrative block of the CCD Problems section.
+     See HITSP/C32 Table 2.2.1-2 and Table 2.2.1.7-2.
+   </assert>
+
+   <assert test='.//cda:templateId[@root = "2.16.840.1.113883.10.20.1.24"]
+                 [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]'> 
+     Note: HITSP/C32 may contain a HITSP/C32 Medications Administration Information element represented as a CCD Medication Activity (2.16.840.1.113883.10.20.1.24) entry under a CCD Medications section (2.16.840.1.113883.10.20.1.8). The C32 templateId (2.16.840.1.113883.3.88.11.32.8) may optionally be included. The lack of any such information may be asserted in the narrative block of the CCD Medications section.
+     See HITSP/C32 Table 2.2.1-2.
+   </assert>
+
+   <assert test='//cda:templateId[@root="2.16.840.1.113883.10.20.1.40"]'>
+     Note: A HITSP/C32 document may contain C32 Comments modules represented as CCD Comments entries (2.16.840.1.113883.10.20.1.40). The HITSP/C32 template ID for Comment (2.16.840.1.113883.3.88.11.32.12) may optionally be included.
+     See Table 2.2.1-2 and Section 2.2.1.12.
+   </assert> 
+
+   <assert test='//cda:templateId[@root="2.16.840.1.113883.10.20.1.17"]'>
+     Note: A HITSP/C32 document may contain C32 Advance Directives modules represented as CCD Advance Directive observations (2.16.840.1.113883.10.20.1.17). The HITSP/C32 template ID for Advance Directive (2.16.840.1.113883.3.88.11.32.13) may optionally be included.
+     See Table 2.2.1-2 and Section 2.2.1.13.
+   </assert>  
+
+   <assert test='//*[self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]
+                    [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.6"]'>
+     Note: A HITSP/C32 document may contain C32 Immunization Event Entries represented as CCD Medication activities (2.16.840.1.113883.10.20.1.24) under a CCD Immunizations section (2.16.840.1.113883.10.20.1.6). The HITSP/C32 template ID for Immunizations Event Entry (2.16.840.1.113883.3.88.11.32.14) may optionally be included.
+     See Section 2.2.1.14.
+   </assert>  
+
+   <assert test='//*[self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"]]
+                    [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.16"]'>
+     Note: A HITSP/C32 document may contain C32 Vital Signs observations represented as CCD Result observations (2.16.840.1.113883.10.20.1.31) under a CCD Vital Signs section (2.16.840.1.113883.10.20.1.16). The HITSP/C32 template ID for Vital Signs observation (2.16.840.1.113883.3.88.11.32.15) may optionally be included.
+     See Section 2.2.1.15.
+   </assert>  
+
+   <assert test='//*[self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"]]
+                    [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.14"]'>
+     Note: A HITSP/C32 document may contain C32 Result observations represented as CCD Result observations (2.16.840.1.113883.10.20.1.31) under a CCD Results section (2.16.840.1.113883.10.20.1.14). The HITSP/C32 template ID for Result observation (2.16.840.1.113883.3.88.11.32.16) may optionally be included.
+     See Section 2.2.1.16.
+   </assert>  
+
+   <assert test='//*[self::cda:encounter[cda:templateId/@root="2.16.840.1.113883.10.20.1.21"]]
+                    [ancestor::cda:section/cda:templateId/@root="2.16.840.1.113883.10.20.1.3"]'>
+     Note: A HITSP/C32 document may contain C32 Encounter entries represented as CCD Encounter activities (2.16.840.1.113883.10.20.1.21) under a CCD Encounters section (2.16.840.1.113883.10.20.1.3). The HITSP/C32 template ID for Encounter entry (2.16.840.1.113883.3.88.11.32.17) may optionally be included.
+     See Section 2.2.1.17.
+   </assert>
+
+   <assert test='//cda:observation[*[@code="77386006" and @codeSystem="2.16.840.1.113883.6.96"]]'>
+     Note: A HITSP/C32 document may contain a C32 Pregnancy module represented as a SNOMED "Patient currently pregnant" observation (code=77386006), or its negation. The observation may appear in any C32 section where it is legal to have a cda:observation element, including: Conditions, Vital Signs, or Results. 
+     See Table 2.2.1-2 and Section 2.2.1.9.
+   </assert>
+
+ </rule>
+
+  
+ <!-- Add additional rules for Notes (O) from Section 2.2.1 -->
+
+   <!-- Section 2.2.1 Person Information Module --> 
+
+ <rule context='/cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient'>   
+
+   <assert test='cda:religiousAffiliationCode'>
+     Note: HITSP/C32 may contain a Religious Affiliation data element for the Patient.
+     See Table 2.2.1.2-2.
+   </assert>   
+
+   <assert test='cda:raceCode or sdtc:raceCode'>
+     Note: HITSP/C32 may contain a Race data element for the Patient. 
+     See Table 2.2.1.2-2.
+   </assert>     
+
+   <assert test='sdtc:raceCode'>
+     Note: Second and subsequent raceCode elements for a Patient may be recorded using the sdtc:raceCode extension. 
+     See Section 2.2.1.2.6 rule C32-[35].
+   </assert> 
+
+   <assert test='cda:ethnicityCode'>
+     Note: HITSP/C32 may contain an Ethnicity data element for the Patient.
+     See Table 2.2.1.2-2.
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.1 Person Name Constraints --> 
+
+ <rule context='/cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient/cda:name'>   
+
+   <assert test='count(../cda:name) &gt; 1'>
+     Note: More than one Patient Name may exist to properly retain birth names, maiden names, and aliases.
+     See Section 2.2.1.2.1 rule C32-[7].
+   </assert>
+
+   <assert test='not(../cda:name[2]) or ../cda:name[@use="P"]'>
+     Note: An alias or former name for a patient may be identified with the use attribute set to P.
+     See Section 2.2.1.2.1 rule C32-[8].
+   </assert>
+
+ </rule>
+
+   <!-- Section 2.2.1.2.2 Address Constraints -->
+   <!-- No New Requirements or New Rule Context --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]'>
+ ADD ASSERTS
+ </rule>
+
+   <!-- Section 2.2.1.2.3 Person Telecom Constraints -->
+   <!-- No New Requirements or New Rule Context --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]'>
+ ADD ASSERTS
+ </rule>
+ 
+   <!-- Section 2.2.1.2.5 Marital Status Constraints --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:maritalStatusCode'>   
+
+ </rule>
+
+   <!-- Section 2.2.1.2.6 Race Constraints --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:raceCode'>   
+
+ </rule>
+
+   <!-- Section 2.2.1.2.7 Ethnicity Constraints -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:ethnicGroupCode'>   
+
+ </rule>
+
+   <!-- Section 2.2.1.2.8 Religious Affiliation Constraints -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.1"]/cda:recordTarget/cda:patientRole/cda:patient/cda:religiousAffiliationcode'>   
+
+ </rule>
+
+   <!-- Section 2.2.1.11 Information Source module -->
+
+ <rule context='*[self::cda:author][not(self::cda:author[1])]'> 
+
+ </rule>
+
+ <rule context='*[self::cda:externalDocument][parent::cda:reference]'>   
+
+   <assert test='cda:text/cda:reference/@value'>
+     Note: A HITSP/C32 Section or Entry External Reference may contain a C32 Reference Document URL element. 
+     See Section 2.2.1.11 table 2.2.1.11-2.
+   </assert>
+
+ </rule>
+
+</pattern>
+

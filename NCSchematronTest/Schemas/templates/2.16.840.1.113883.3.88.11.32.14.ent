@@ -1,0 +1,201 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.14 -->
+<!-- HITSP/C32 Immunizations Module -->
+
+
+<!-- Errors Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.14-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.14"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.6"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]'>
+     Error: The HITSP/C32 templateId for Immunization Event (2.16.840.1.113883.3.88.11.32.14) is in the wrong location. The HITSP/C32 Immunizations Event Entry data element shall be represented as a CCD Medication Activity substanceAdministration act (2.16.840.1.113883.10.20.1.24) under a CCD Immunizations section (2.16.840.1.113883.10.20.1.6). The C32 templateId for Immunization Event may optionally be included on the CCD Medication Activity substanceAdministration act.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+
+ </rule>
+
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.14"]'>
+ 
+
+<!-- Medication Information  Required (R) -->
+
+   <assert test='cda:consumable/cda:manufacturedProduct[cda:templateId/@root="2.16.840.1.113883.10.20.1.53"]'>
+     Error: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) shall contain a C32 Medication Information element represented as a CCD Manufactured Product (2.16.840.1.113883.10.20.1.53). The C32 templateId for Medication Information (2.16.840.1.113883.3.88.11.32.9) may optionally be included on the CCD Manufactured Product element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2 and Figure 2.2.1.14-1.
+     Note: Does HITSP want the Medication Information element to carry the templateId for Medication Information from the Medications section (2.16.840.1.113883.3.88.11.32.9) as shown in Figure 2.2.1.14-1? It adds requirements related to codeSystems for the manufacturedMaterial (as medication) that may not be intended for manufacturedMaterial (as immunization).
+   </assert>   
+
+<!-- Refusal Indication Required (R) -->
+
+   <assert test='@negationInd'>
+     Error: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) shall contain a C32 Refusal Indication attribute (Boolean). A value of false indicates that the immunization was administered. A value of true indicates that the medication was refused and not taken. The reason for refusal, if known, is carried by the C32 Refusal Reason data element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+
+   <assert test='not(@negationInd="true") or cda:entryRelationship[@typeCode="RSON"]'>
+     Error: If a HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) contains a Refusal Indication that indicates an immunization was refused, then the Immunization Event Entry shall contain a C32 Refusal Reason data element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2 and rule c32-[199].
+   </assert>
+
+   <assert test='not(@negationInd="true") or cda:entryRelationship[@typeCode="RSON"]/cda:act/cda:code[@code 
+                                             and @codeSystem="2.16.840.1.113883.11.19725"]'>
+     Error: A HITSP/C32 Refusal Reason data element shall be an act with code drawn from the HL7 ActNoImmunizationReason vocabulary (2.16.840.1.113883.11.19725).
+     See HITSP/C32 Section 2.2.1.14 rule c32-[199].
+   </assert>
+
+   <assert test='not(@negationInd="true") or cda:entryRelationship[@typeCode="RSON"]/cda:act/cda:code[@codeSystem="2.16.840.1.113883.11.19725" and 
+                                               (@code="IMMUNE" 
+                                             or @code="MEDPREC" or @code="OSTOCK" 
+                                             or @code="PATOBJ" or @code="PHILISOP" or @code="RELIG" 
+                                             or @code="VACEFF" or @code="VACSAF")]'>
+     Error: A HITSP/C32 Refusal Reason data element shall be an act with code drawn from the HL7 ActNoImmunizationReason vocabulary (2.16.840.1.113883.11.19725). Valid values are: IMMUNE (immunity), MEDPREC (medical precaution), OSTOCK (out of stock), PATOBJ (patient objection), PHILISOP (philosophical objection), RELIG (religious objection), VACEFF (vaccine efficiency concerns), or VACSAF (vaccine safety concerns).
+     See HITSP/C32 Section 2.2.1.14 rule c32-[199].
+   </assert>
+   
+ </rule>
+
+</pattern>
+
+
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.14-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without tempateIds -->
+
+ <!-- Set New context without templateIds -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.6"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]'>
+ 
+
+<!-- Medication Information  Required (R) -->
+
+   <assert test='cda:consumable/cda:manufacturedProduct[cda:templateId/@root="2.16.840.1.113883.10.20.1.53"]'>
+     Constraint Violation: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) shall contain a C32 Medication Information element represented as a CCD Manufactured Product (2.16.840.1.113883.10.20.1.53). The C32 templateId for Medication Information (2.16.840.1.113883.3.88.11.32.9) may optionally be included on the CCD Manufactured Product element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2 and Figure 2.2.1.14-2.
+     Note: Does HITSP want the Medication Information element to carry the templateId for Medication Information from the Medications section (2.16.840.1.113883.3.88.11.32.9) as shown in Figure 2.2.1.14-2? It adds requirements related to codeSystems for the manufacturedMaterial (as medication) that may not be intended for manufacturedMaterial (as immunization).
+   </assert>   
+
+   <!-- Rule Immunizations C32-[198] See Medication Information entity file 2.16.840.1.113883.3.88.11.32.9 -->
+
+<!-- Refusal Indication Required (R) -->
+
+   <assert test='@negationInd'>
+     Constraint Violation: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) shall contain a C32 Refusal Indication attribute (Boolean). A value of false indicates that the immunization was administered. A value of true indicates that the medication was refused and not taken. The reason for refusal, if known, is carried by the C32 Refusal Reason data element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+
+   <assert test='not(@negationInd="true") or cda:entryRelationship[@typeCode="RSON"]'>
+     Constraint Violation: If a HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) contains a Refusal Indication that indicates an immunization was refused, then the Immunization Event Entry shall contain a C32 Refusal Reason data element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2 and rule c32-[199].
+   </assert>
+
+   <assert test='not(@negationInd="true") or cda:entryRelationship[@typeCode="RSON"]/cda:act/cda:code[@code 
+                                             and @codeSystem="2.16.840.1.113883.11.19725"]'>
+     Constraint Violation: A HITSP/C32 Refusal Reason data element shall be an act with code drawn from the HL7 ActNoImmunizationReason vocabulary (2.16.840.1.113883.11.19725).
+     See HITSP/C32 Section 2.2.1.14 rule c32-[199].
+   </assert>
+
+   <assert test='not(@negationInd="true") or cda:entryRelationship[@typeCode="RSON"]/cda:act/cda:code[@codeSystem="2.16.840.1.113883.11.19725" and 
+                                               (@code="IMMUNE" 
+                                             or @code="MEDPREC" or @code="OSTOCK" 
+                                             or @code="PATOBJ" or @code="PHILISOP" or @code="RELIG" 
+                                             or @code="VACEFF" or @code="VACSAF")]'>
+     Constraint Violation: A HITSP/C32 Refusal Reason data element shall be an act with code drawn from the HL7 ActNoImmunizationReason vocabulary (2.16.840.1.113883.11.19725). Valid values are: IMMUNE (immunity), MEDPREC (medical precaution), OSTOCK (out of stock), PATOBJ (patient objection), PHILISOP (philosophical objection), RELIG (religious objection), VACEFF (vaccine efficiency concerns), or VACSAF (vaccine safety concerns).
+     See HITSP/C32 Section 2.2.1.14 rule c32-[199].
+   </assert>
+   
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.14-warning'>
+
+
+
+ <!-- Asserts with new Rule context for existence of manufactured material --> 
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.6"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]/cda:consumable/cda:manufacturedProduct/cda:manufacturedMaterial'> 
+
+   <assert test='cda:code/@code'>
+     Warning: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) should contain a C32 coded Product Name. 
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert> 
+
+   <assert test='cda:lotNumberText'>
+     Warning: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) should contain a C32 Lot Number. 
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+
+   <!-- Rule Immunizations C32-[198] See Medication Information entity file 2.16.840.1.113883.3.88.11.32.9 -->
+ 
+ </rule>
+
+
+ <!-- Set new Context for Medication Information -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.6"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]/cda:consumable/cda:manufacturedProduct[cda:templateId/@root="2.16.840.1.113883.10.20.1.53"]'>
+
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.9"]'>
+   Warning: If a HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) contains a CCD manufacturedProduct element (2.16.840.1.113883.10.20.1.53), then that product element may optionally contain the C32 templateId for Medication Information (2.16.840.1.113883.3.88.11.32.9).
+   See HITSP/C32 Section 2.2.1.14 Example in Figure 2.2.1.14-1.
+   </assert>
+
+ </rule>
+
+</pattern>
+
+
+
+<!-- Notes Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.14-note'> 
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.6"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]'>
+
+   <assert test='cda:effectiveTime'>
+     Note: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) may contain a C32 Administered Date element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+
+   <assert test='cda:entryRelationship[@typeCode="SUBJ"]/cda:observation/cda:value'>
+     Note: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) may contain a C32 Medication Series Number element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+
+   <assert test='cda:entryRelationship[@typeCode="CAUS"]/cda:observation'>
+     Note: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) may contain a C32 Reaction element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+
+   <assert test='cda:performer/cda:assignedEntity'>
+     Note: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) may contain a C32 Performer element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+
+   <assert test='cda:consumable/cda:manufacturedProduct/cda:manufacturerOrganization'>
+     Note: A HITSP/C32 Immunization Event Entry data element (2.16.840.1.113883.3.88.11.32.14) may contain a C32 Drug Manufacturer element.
+     See HITSP/C32 Section 2.2.1.14 Table 2.2.1.14-2.
+   </assert>
+ 
+ </rule>
+
+</pattern>
+
+

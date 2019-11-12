@@ -1,0 +1,101 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.11 -->
+<!-- HITSP/C32 Order Information data element -->
+
+
+<!-- Errors pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.11-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.11"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+   <assert test='ancestor::cda:section[cda:templateId[@root="2.16.840.1.113883.10.20.1.8"]]
+             and parent::cda:entryRelationship[@typeCode="REFR"]
+             and self::cda:supply[@moodCode="INT" or @moodCode="EVN"]'>
+     Error: The HITSP/C32 templateId for Order Information (2.16.840.1.113883.3.88.11.32.11) is in the wrong location. A HITSP/C32 Order Information data element shall be represented as a CCD supply entry, in INT mood, under a refers to (REFR) entryRelationship in a CCD Medications section (2.16.840.1.113883.10.20.1.8). It may be recorded as part of the fufillment history (with moodCode="EVN") or as part of the administration information. The C32 templateId for Order Information may optionally be included on the cda:supply element. 
+     See Table 2.2.1.9-2 and Section 2.2.1.9.16.
+   </assert>
+
+   <assert test='ancestor::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"] 
+              or ancestor::cda:supply[cda:templateId/@root="2.16.840.1.113883.10.20.1.34"]'>
+     Error: A HITSP/C32 Order Information data element (2.16.840.1.113883.3.88.11.32.11) shall be contained in a CCD substanceAdministration entry (2.16.840.1.113883.10.20.1.24) or in a CCD supply entry (2.16.840.1.113883.10.20.1.34). 
+     See Section 2.2.1.9.16.
+   </assert>
+
+      
+ </rule>
+
+</pattern>
+
+
+
+<!-- Warnings pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.11-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without tempateIds -->
+
+ <!-- Set New context for Providers without templateIds -->
+
+ <!-- No Changes necessary - Order Information is only Required-if-Known(R2) and has no required sub-elements -->
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+
+
+<!-- Warnings pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.11-warning'>
+
+
+ <rule context='*[ancestor::cda:section[cda:templateId[@root="2.16.840.1.113883.10.20.1.8"]]
+             and (ancestor::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"] 
+               or ancestor::cda:supply[cda:templateId/@root="2.16.840.1.113883.10.20.1.34"])
+             and parent::cda:entryRelationship[@typeCode="REFR"]
+             and self::cda:supply[@moodCode="INT"]]'>
+
+   <assert test='cda:quantity'>
+   Warning: A HITSP/C32 Order Information data element (2.16.840.1.113883.3.88.11.32.11) should contain a C32 Quantity Ordered element to report the quantity contained in a single order. If present, it should be recorded in the cda:quantity element within the supply element used to record C32 Order Information.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.18. 
+   </assert>
+
+   <assert test='cda:id'>
+   Warning: A HITSP/C32 Order Information data element (2.16.840.1.113883.3.88.11.32.11) should contain a CDA Order Number, i.e. the identifier from the perspective of the ordering provider. If present, it should be recorded in the cda:id element within the supply element used to record C32 Order Information.
+   See Section 2.2.1.9.18 rule C32-[142]. 
+   </assert>
+
+ </rule>
+
+</pattern>
+
+
+
+<!-- Notes pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.11-note'>
+
+ <rule context='*[ancestor::cda:section[cda:templateId[@root="2.16.840.1.113883.10.20.1.8"]]
+             and (ancestor::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"] 
+               or ancestor::cda:supply[cda:templateId/@root="2.16.840.1.113883.10.20.1.34"])
+             and parent::cda:entryRelationship[@typeCode="REFR"]
+             and self::cda:supply[@moodCode="INT"]]'>
+   <assert test='cda:repeatNumber'>
+   Note: A HITSP/C32 Order Information data element (2.16.840.1.113883.3.88.11.32.11) may contain a C32 Fills element to report the number of times the order may be filled.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.17. 
+   </assert>
+
+   <assert test='cda:author/cda:assignedAuthor/cda:assignedPerson/cda:name'>
+   Note: A HITSP/C32 Order Information data element (2.16.840.1.113883.3.88.11.32.11) may contain a C32 Ordering Provider element to report the name of the author of the order. 
+   See Table 2.2.1.9-2 and Section 2.2.1.10. 
+   </assert>
+
+   <assert test='cda:author/cda:time'>
+   Note: A HITSP/C32 Order Information data element (2.16.840.1.113883.3.88.11.32.11) may contain a CDA Author element with a Date and Time to record the date and time of the order creation.
+   See Table 2.2.1.9-2. 
+   </assert>
+
+ </rule>
+
+</pattern>

@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+    <!-- The test just requires a root node. The schema doesn't require any values from the document. -->
+</root>

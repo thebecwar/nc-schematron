@@ -1,0 +1,457 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.8 -->
+<!-- HITSP/C32 Medications - Administration Information Module -->
+
+
+<!-- Error Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.8-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.8"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]'>
+     Error: The HITSP/C32 templateId for Medications - Administration Information (2.16.840.1.113883.3.88.11.32.8) is in the wrong location. The HITSP/C32 Medications - Administration Information data element shall be represented as a CCD Medication Activity substanceAdministration (2.16.840.1.113883.10.20.1.24) under a CCD Medications section (2.16.840.1.113883.10.20.1.8). The C32 templateId for Medications - Administration Information may optionally be included on the CCD Medication Activity substanceAdministration.
+     See HITSP/C32 Section 2.2.1.9 Table 2.2.1.9-2 and Section 2.2.1.9.1.
+   </assert>
+
+ <!-- Medication Information  Required (R) -->
+   <assert test='cda:consumable/cda:manufacturedProduct[cda:templateId/@root="2.16.840.1.113883.10.20.1.53"]'>
+     Error: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall contain a C32 Medication Information element represented as a CCD Manufactured Product (2.16.840.1.113883.10.20.1.53). The HITSP/C32 templateId for Medication Information (2.16.840.1.113883.3.88.11.32.9) may optionally be included on the CCD Manufactured Product.
+     See Table 2.2.1.9-2 and Section 2.2.1.9.9.
+   </assert>
+
+   <!-- Item 8.01 Free Text Sig -->
+   <assert test='not(cda:text) or cda:text/cda:reference/@value'>
+   Error: A HITSP/C32 Free Text Sig data element shall contain a cda:reference element whose value attribute points to the narrative portion of the CCD section.
+   See Section 2.2.1.9.1 rule C32-[99]. 
+   </assert>
+
+   <!-- Section 2.2.1.9.3 Administration Timing Error Constraints -->
+
+   <assert test='not(cda:effectiveTime[1]) or cda:effectiveTime[1][@nullFlavor or @xsi:type="IVL_TS"]'>
+   Error: The first effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall use the IVL_TS data type to record the start and stop dates for administration of the medication. If the administration is a single occurrence, then use the effectiveTime/@value attribute to declare a collapsed interval of time equal to the precision of the timestamp used for that attribute.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[103]. 
+   </assert>
+
+   <assert test='not(cda:effectiveTime[2]) or cda:effectiveTime[2][@operator="A"]'>
+   Error: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall include the operator attribute with its value set to A.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[105].
+   </assert>
+
+   <assert test='not(cda:effectiveTime[2]) or cda:effectiveTime[2][@nullFlavor or @xsi:type="PIVL_TS" or @xsi:type="EIVL"]'>
+   Error: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall use the PIVL_TS data type to record details about frequency, interval, and duration and shall use the EIVL data type to record administration based on activities of daily living.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[106], C32-[107], C32-[108].
+   </assert>
+
+   <assert test='not(cda:effectiveTime[2][@xsi:type="PIVL_TS"]) or cda:effectiveTime[2][@xsi:type="PIVL_TS" and @institutionSpecified]/cda:period'>
+   Error: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall use the PIVL_TS data type to record details about frequency, interval, and duration, shall use the institutionSpecified attribute to distinguish between interval and frequency (true is frequency and false is interval), and shall contain a period element to provide the timing of the interval or frequency.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[106], C32-[107].
+   </assert>
+
+   <assert test='not(cda:effectiveTime[2][@xsi:type="EIVL"]) or cda:effectiveTime[2][@xsi:type="EIVL"]/cda:event'>
+   Error: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall use the EIVL data type to indicate administration based on activities of daily living and shall identify the events which trigger administration in a cda:event element beneath the effectiveTime element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[108].
+   </assert>
+ 
+
+   <!-- Section 2.2.1.9.4 through Section 2.2.1.9.8 Asserts -->
+
+   <assert test='not(cda:routeCode) or cda:routeCode[@nullflavor or cda:originalText or (@code and @codeSystem="2.16.840.1.113883.3.26.1.1")]'>
+   Error: A HITSP/C32 Route of Administration element shall have a value drawn from the FDA route of administration code system (2.16.840.1.113883.3.26.1.1). CHECK list.
+   See Section 2.2.1.9.4 rule C32-[109]. 
+   </assert>
+
+   <assert test='not(cda:doseQuantity) or cda:doseQuantity[@nullflavor or @value]'>
+   Error: A HITSP/C32 Dose Quantity element shall have a CDA value attribute. The unit attribute may be present when needed. If present it shall be coded using the Unified Code for Units of Measure (UCUM).
+   See Section 2.2.1.9.5 rules C32-[110] and C32-[111].
+   Also see rule C32-[112] for how to represent doses described in tablets, capsules, etc.
+   </assert>
+
+   <assert test='not(cda:approachSiteCode) or cda:approachSiteCode[@nullflavor or cda:originalText or (@code and @codeSystem="2.16.840.1.113883.6.96")]'>
+   Error: A HITSP/C32 Approach Site Code shall be from the SNOMED CT code system (2.16.840.1.113883.6.96) with a value drawn from the Anatomical Structure (91723000) hierarchy. CHECK list.
+   See Section 2.2.1.9.6 rule C32-[113] and C32-[114]. 
+   </assert>
+
+   <assert test='not(cda:administrationUnitCode) or cda:administrationUnitCode[@nullflavor or cda:originalText or (@code and @codeSystem="2.16.840.1.113883.3.26.1.1")]'>
+   Error: A HITSP/C32 Product Form unit code shall be from the FDA Dosage Form vocabulary (2.16.840.1.113883.3.26.1.1). CHECK list.
+   See Section 2.2.1.9.7 rule C32-[115]. 
+   </assert>
+
+ </rule>
+
+
+ <!-- Set new Context for Fulfillment Instructions -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.8"]/cda:entryRelationship/cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.43"]/cda:text'>
+
+   <assert test='cda:reference/@value'>
+   Error: A HITSP/C32 Fulfillment Instructions data element shall contain a cda:reference element whose value attribute points to the narrative text that contains the instructions.
+   See Section 2.2.1.9.19 rule C32-[147]. 
+   </assert>
+   
+ </rule>
+
+
+ <!-- Set new Context for Fulfillment History -->
+ <!-- No Additional HITSP/C32 Requirements -->
+
+</pattern>
+
+
+
+<!-- Warning pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.8-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without tempateIds -->
+
+ <!-- Set New context without templateIds -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]'>
+
+<!-- Medication Information  Required (R) -->
+   <assert test='cda:consumable/cda:manufacturedProduct[cda:templateId/@root="2.16.840.1.113883.10.20.1.53"]'>
+     Constraint Violation: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall contain a C32 Medication Information element represented as a CCD Manufactured Product (2.16.840.1.113883.10.20.1.53). The HITSP/C32 templateId for Medication Information (2.16.840.1.113883.3.88.11.32.9) may optionally be included on the CCD Manufactured Product.
+     See Table 2.2.1.9-2 and Section 2.2.1.9.9.
+   </assert>
+
+   <!-- Item 8.01 Free Text Sig -->
+   <assert test='not(cda:text) or cda:text/cda:reference/@value'>
+   Constraint Violation: A HITSP/C32 Free Text Sig data element shall contain a cda:reference element whose value attribute points to the narrative portion of the CCD section.
+   See Section 2.2.1.9.1 rule C32-[99]. 
+   </assert>
+
+   <!-- Section 2.2.1.9.3 Administration Timing Error Constraints -->
+
+   <assert test='not(cda:effectiveTime[1]) or cda:effectiveTime[1][@nullFlavor or @xsi:type="IVL_TS"]'>
+   Constraint Violation: The first effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall use the IVL_TS data type to record the start and stop dates for administration of the medication. If the administration is a single occurrence, then use the effectiveTime/@value attribute to declare a collapsed interval of time equal to the precision of the timestamp used for that attribute.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[103]. 
+   </assert>
+
+   <assert test='not(cda:effectiveTime[2]) or cda:effectiveTime[2][@operator="A"]'>
+   Constraint Violation: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall include the operator attribute with its value set to A.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[105].
+   </assert>
+
+   <assert test='not(cda:effectiveTime[2]) or cda:effectiveTime[2][@nullFlavor or @xsi:type="PIVL_TS" or @xsi:type="EIVL"]'>
+   Constraint Violation: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall use the PIVL_TS data type to record details about frequency, interval, and duration and shall use the EIVL data type to record administration based on activities of daily living.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[106], C32-[107], C32-[108].
+   </assert>
+
+   <assert test='not(cda:effectiveTime[2][@xsi:type="PIVL_TS"]) or cda:effectiveTime[2][@xsi:type="PIVL_TS" and @institutionSpecified]/cda:period'>
+   Constraint Violation: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall use the PIVL_TS data type to record details about frequency, interval, and duration, shall use the institutionSpecified attribute to distinguish between interval and frequency (true is frequency and false is interval), and shall contain a period element to provide the timing of the interval or frequency.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[106], C32-[107].
+   </assert>
+
+   <assert test='not(cda:effectiveTime[2][@xsi:type="EIVL"]) or cda:effectiveTime[2][@xsi:type="EIVL"]/cda:event'>
+   Constraint Violation: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) shall use the EIVL data type to indicate administration based on activities of daily living and shall identify the events which trigger administration in a cda:event element beneath the effectiveTime element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[108].
+   </assert>
+ 
+
+   <!-- Section 2.2.1.9.4 through Section 2.2.1.9.8 Asserts -->
+
+   <assert test='not(cda:routeCode) or cda:routeCode[@nullflavor or cda:originalText or (@code and @codeSystem="2.16.840.1.113883.3.26.1.1")]'>
+   Constraint Violation: A HITSP/C32 Route of Administration element shall have a value drawn from the FDA route of administration code system (2.16.840.1.113883.3.26.1.1). CHECK list.
+   See Section 2.2.1.9.4 rule C32-[109]. 
+   </assert>
+
+   <assert test='not(cda:doseQuantity) or cda:doseQuantity[@nullflavor or @value]'>
+   Constraint Violation: A HITSP/C32 Dose Quantity element shall have a CDA value attribute. The unit attribute may be present when needed. If present it shall be coded using the Unified Code for Units of Measure (UCUM).
+   See Section 2.2.1.9.5 rules C32-[110] and C32-[111].
+   Also see rule C32-[112] for how to represent doses described in tablets, capsules, etc.
+   </assert>
+
+   <assert test='not(cda:approachSiteCode) or cda:approachSiteCode[@nullflavor or cda:originalText or (@code and @codeSystem="2.16.840.1.113883.6.96")]'>
+   Constraint Violation: A HITSP/C32 Approach Site Code shall be from the SNOMED CT code system (2.16.840.1.113883.6.96) with a value drawn from the Anatomical Structure (91723000) hierarchy. CHECK list.
+   See Section 2.2.1.9.6 rule C32-[113] and C32-[114]. 
+   </assert>
+
+   <assert test='not(cda:administrationUnitCode) or cda:administrationUnitCode[@nullflavor or cda:originalText or (@code and @codeSystem="2.16.840.1.113883.3.26.1.1")]'>
+   Constraint Violation: A HITSP/C32 Product Form unit code shall be from the FDA Dosage Form vocabulary (2.16.840.1.113883.3.26.1.1). CHECK list.
+   See Section 2.2.1.9.7 rule C32-[115]. 
+   </assert>
+
+ </rule>
+
+
+ <!-- Set new Context for Fulfillment Instructions -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]/cda:entryRelationship/cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.43"]/cda:text'>
+
+   <assert test='cda:reference/@value'>
+   Constraint Violation: A HITSP/C32 Fulfillment Instructions data element shall contain a cda:reference element whose value attribute points to the narrative text that contains the instructions.
+   See Section 2.2.1.9.19 rule C32-[147]. 
+   </assert>
+   
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+
+
+<!-- Warning pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.8-warning'>
+
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]'>
+
+   <!-- Section 2.2.1.9.3 Multiple rules for Medication Administrative Timing -->
+ 
+   <assert test='not(cda:effectiveTime[xsi:type="IVL_TS"]) or cda:effectiveTime/@value or cda:effectiveTime[1]/cda:high'>
+   Warning: The HITSP/C32 Indicate Medication Stoped element, if known, shall be recorded in the high element of the first effectiveTime element of the C32 Administration Information element. A single administration is effectively stopped after the single administration.
+   See Section 2.2.1.9.2 rule C32-[100]. 
+   </assert>
+
+   <assert test='not(cda:doseQuantity/@value) or cda:doseQuantity[@value and @unit]'>
+   Warning: A HITSP/C32 Dose Quantity element shall have a CDA value attribute. The unit attribute may be present when needed. If present it shall be coded using the Unified Code for Units of Measure (UCUM), or when the coded product describes the strength or concentration of the medication, and the dosing is in administration units (e.g. 1 tablet, 2 capsules), then the unit attribute should contain the preferred name of the presentation units within braces {} using units of presentation from the NCI Thesaurus. CHECK UCUM expression.
+   See Section 2.2.1.9.5 rules C32-[110], C32-[111], C32-[112].
+   Also see rule C32-[112] for how to represent doses described in tablets, capsules, etc.
+   </assert>
+
+   <!-- item 8.19 Type of Medication -->
+   <assert test='cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[not(cda:templateId) or cda:templateId/@root="2.16.840.1.113883.3.88.11.32.10"]'>
+     Warning: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) should contain a SUBJ entryRelationship whose target is a C32 Type of Medication observation to classify the Medication as prescription or over-the-counter. The observation element may optionally carry the HITSP/C32 template Id for Type of Medication (2.16.840.1.113883.3.88.11.32.10). There is no corresponding CCD templateId for this construct; however, there is a SUBJ observation CCD construct (2.16.840.1.113883.10.20.1.46) that may carry an unrelated Medication Series Number. 
+     See Table 2.2.1.9-2 and Section 2.2.1.9.11.
+   </assert>
+
+   <!-- Order Information Required-if-Known (R2) -->
+   <assert test='cda:entryRelationship[@typeCode="REFR"]/cda:supply[@moodCode="INT"]'>
+     Warning: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) should contain a C32 Order Information supply element (2.16.840.1.113883.3.88.11.32.11) in INT mood.
+     See Table 2.2.1.9-2 and Section 2.2.1.9.16.
+   </assert>
+
+   <!-- item 8.20 Status of Medication -->
+   <assert test='cda:entryRelationship[@typeCode="REFR"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.47"]'>
+     Warning: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) should contain a CCD Representation of Status (2.16.840.1.113883.10.20.1.47) observation. If this element is included, then CCD rules require that constraints of CCD status observation (2.16.840.1.113883.10.20.1.57) also be satisfied, which requires that LOINC code 33999-4 (Status) be used for the code element and  CONF-353 requires that the value element be of type CE and be from a CCD value set consisting of values: Active (55561003), On Hold (421139008), Prior History (392521001) or No longer Active (73425007).
+     See Table 2.2.1.9-2 and Section 2.2.1.9.12 rule C32-[130].
+   </assert>
+
+   <!-- item 8.20 Status of Medication -->
+   <assert test='cda:entryRelationship[@typeCode="REFR"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.47"]
+[cda:code[@codeSystem="2.16.840.1.113883.6.1" and @code="33999-4"]][cda:value[@codeSystem="2.16.840.1.113883.6.96" and (@code="55561003" or @code="421139008" or @code="392521001" or @code="73425007")]]'>
+     Warning: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) should contain a CCD Representation of Status (2.16.840.1.113883.10.20.1.47) observation. If this element is included, then CCD rules require that constraints of CCD status observation (2.16.840.1.113883.10.20.1.57) also be satisfied, which requires that LOINC code 33999-4 (Status) be used for the code element, and  CONF-353 requires that the value element be of type CE and be from a CCD value set consisting of values: Active (55561003), On Hold (421139008), Prior History (392521001) or No longer Active (73425007).
+     See Table 2.2.1.9-2 and Section 2.2.1.9.12 rule C32-[130].
+   </assert>
+
+ </rule>
+
+
+ <!-- Set new Context for Medication Information -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]/cda:consumable/cda:manufacturedProduct[cda:templateId/@root="2.16.840.1.113883.10.20.1.53"]'>
+
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.9"]'>
+   Warning: If a HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) contains a CCD manufacturedProduct element (2.16.840.1.113883.10.20.1.53), then that product element may optionally contain the C32 templateId for Medication Information (2.16.840.1.113883.3.88.11.32.9).
+   See Section 2.2.1.9.9.
+   </assert>
+
+ </rule>
+
+
+ <!-- Set new Context for Type of Medication -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[not(cda:templateId/@root="2.16.840.1.113883.10.20.1.46")]'>
+
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.10"]'>
+   Warning: If a HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) contains a SUBJ observation, then that observation may optionally carry the C32 templateId for Type of Medication (2.16.840.1.113883.3.88.11.32.10). There is no corresponding CCD templateId for this construct; however, there is a SUBJ observation CCD construct (2.16.840.1.113883.10.20.1.46) that may carry an unrelated Medication Series Number.
+   See Section 2.2.1.9.11.
+   </assert>
+
+ </rule>
+
+
+ <!-- Set new Context for Order Information -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]/cda:entryRelationship[@typeCode="REFR"]/cda:supply[@moodCode="INT"]'>
+
+   <assert test='cda:templateId[@root="2.16.840.1.113883.3.88.11.32.11"]'>
+   Warning: If a HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) contains a C32 Order Information element, then that element should contain the C32 templateId for Order Information (2.16.840.1.113883.3.88.11.32.11).
+   See Section 2.2.1.9.16.
+   </assert>
+
+ </rule>
+
+
+ <!-- Set new Context for Fulfillment Instructions -->
+ <!-- No new HITSP/C32 Warnings -->
+
+
+ <!-- Set new Context for Fulfillment History -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]/cda:entryRelationship/cda:supply[@moodCode="EVN"]'>
+
+   <assert test='cda:id'>
+   Warning: A HITSP/C32 Fulfillment History data element should contain a Prescription Number element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.20.
+   </assert>
+
+   <assert test='cda:quantity'>
+   Warning: A HITSP/C32 Fulfillment History data element should contain a Quantity Dispensed element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.22.
+   </assert>
+   
+ </rule>   
+
+</pattern>
+
+
+
+<!-- Notes pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.8-note'>
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]'>
+
+   <!-- Section 2.2.1.9.3 Multipe rules for Medication Administrative Timing -->
+   <!-- NOT YET COMPLETED  -->
+
+   <!-- item 8.21 Indication -->
+   <assert test='cda:entryRelationship[@typeCode="RSON"]/cda:observation'>
+     Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a CCD Reason Indicator whoce target represents the reason for the condition. 
+     See Table 2.2.1.9-2 and Section 2.2.1.9.13.
+   </assert>
+
+   <!-- item 8.22 Patient Instructions -->
+   <assert test='cda:entryRelationship/cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.49"]'>
+     Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a CCD Patient Instructions (2.16.840.1.113883.10.20.1.49) act. 
+     See Table 2.2.1.9-2 and Section 2.2.1.9.14.
+   </assert>
+
+   <!-- item 8.23 Reaction -->
+   <assert test='cda:entryRelationship[@typeCode="CAUS"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.54"]'>
+     Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a CCD Reaction (2.16.840.1.113883.10.20.1.54) observation. 
+     See Table 2.2.1.9-2
+   </assert>
+
+   <!-- item 8.24 Vehicle -->
+   <assert test='cda:participant[@typeCode="CSM"]/cda:participantRole[cda:code/@code="412307009" and cda:code/@codeSystem="2.16.840.1.113883.6.96"]'>
+     Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a C32 Vehicle participant. 
+     See Table 2.2.1.9-2 and Section 2.2.1.9.15.
+   </assert>
+
+   <!-- item 8.25 Dose Indicator -->
+   <assert test='cda:precondition/cda:criterion'>
+     Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a C32 Dose Indicator precondition. 
+     See Table 2.2.1.9-2
+   </assert>
+
+   <assert test='cda:text'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Free Text Sig element.
+   See Table 2.2.1.9-2
+   </assert>
+
+   <assert test='cda:effectiveTime/@value or cda:effectiveTime[1]/cda:high'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain an Indicate Medication Stopped element. A single administration is effectively stopped after the single administration.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.2 rule C32-[100]. 
+   </assert>
+
+   <assert test='count(cda:effectiveTime) = 1 or count(cda:effectiveTime) = 2'>
+   Note: The timing of a C32 Administrative Information data element (2.16.840.1.113883.3.88.11.32.8) may be recorded in one or two effectiveTime elements beneath the substanceAdministration element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[101]. 
+   </assert>
+
+   <assert test='cda:effectiveTime[1]'>
+   Note: The first effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may be used to record the range of time over which the medication is to be administered, either the start and stop dates for administration of the medication or a single administration time for a single administration.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[102]. 
+   </assert>
+
+   <assert test='cda:effectiveTime[2]'>
+   Note: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may be used to record details about frequency, interval, and duration, or triggering events, when more than one administration is to occur. 
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[104].
+   </assert>
+
+   <assert test='cda:effectiveTime[2][@xsi:type="EIVL"]'>
+   Note: The second effectiveTime in a C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may use the EIVL data type to record medication administration based on activities of daily living.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.3 rule C32-[108].
+   </assert>
+
+   <assert test='cda:routeCode'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Route element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.4. 
+   </assert>
+
+   <assert test='cda:doseQuantity'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Dose element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.5. 
+   </assert>
+
+   <assert test='cda:approachSiteCode'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Site element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.6. 
+   </assert>
+
+   <assert test='cda:text'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Dose Restriction element.
+   See Table 2.2.1.9-2
+   </assert>
+
+   <assert test='cda:administrationUnitCode'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Product Form element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.7. 
+   </assert>
+
+   <assert test='cda:code'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Delivery Method element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.8. 
+   </assert>
+
+   <assert test='cda:code/@originalText'>
+   Note: A HITSP/C32 Delivery Method element may be described in the cda:originalText attribute of the cda:code element.
+   See Section 2.2.1.9.8 rule C32-[116] and C32-[117].
+   </assert>
+
+   <assert test='cda:entryRelationship/cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.43"]/cda:text'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Fulfillment Instructions element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.19. 
+   </assert>
+
+   <assert test='cda:entryRelationship/cda:supply[@moodCode="EVN"]'>
+   Note: A HITSP/C32 Administration Information data element (2.16.840.1.113883.3.88.11.32.8) may contain a Fulfillment History element.
+   See Table 2.2.1.9-2. 
+   </assert>
+
+ </rule>
+
+
+ <!-- Set new Context for Fulfillment Instructions -->
+ <!-- No new HITSP/C32 Warnings or Notes -->
+
+
+ <!-- Set new Context for Fulfillment History -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+           and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]/cda:entryRelationship/cda:supply[@moodCode="EVN"]'>
+
+   <assert test='cda:performer/cda:assignedEntity'>
+   Note: A HITSP/C32 Fulfillment History data element may contain a Provider element.
+   See Table 2.2.1.9-2 and Section 2.2.1.9.21.
+   </assert>
+
+   <assert test='cda:performer/cda:assignedEntity/cda:addr'>
+   Note: A HITSP/C32 Fulfillment History data element may contain a Provider Location element.
+   See Table 2.2.1.9-2 and Section 2.2.1.1.2.
+   </assert>
+
+   <assert test='cda:effectiveTime'>
+   Note: A HITSP/C32 Fulfillment History data element may contain a Dispense Date element.
+   See Table 2.2.1.9-2
+   </assert>
+   
+ </rule>   
+
+</pattern>
+
+

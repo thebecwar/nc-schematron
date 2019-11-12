@@ -1,0 +1,139 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.3 -->
+<!-- HITSP/C32 Support Module -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.3-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.3"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+   <assert test='(parent::cda:patient and self::cda:guardian[@classCode ="GUARD"])
+              or (parent::cda:ClinicalDocument and self::cda:participant[@typeCode="IND"])'>
+     Error: The HITSP/C32 templateId for Support (2.16.840.1.113883.3.88.11.32.3) is in the wrong location. The C32 Support module shall be represented as a CDA Guardian under CDA Patient, or as a CDA Participant (indirect participant IND) directly under ClinicalDocument. The C32 templateId for the Support module may optionally be included on either of these CDA elements. 
+   </assert> 
+
+ </rule>
+
+
+ <!-- New Context for Guardian -->
+
+ <rule context='cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient/cda:guardian'>
+
+   <assert test='cda:guardianPerson/cda:name/*'>
+     Error: The HITSP/C32 Patient Guardian element shall contain a non-empty Guardian Person Name element.
+     See Table 2.2.1.4-2
+   </assert>
+
+   <!-- Verify rule C32-[49] -->
+   <assert test='self::cda:guardian[@classCode="GUARD"]'>
+     Error: The C32 Contact Type element shall be expressed as GUARD in the classCode of the Guardian.
+     See Section 2.2.1.4 rule C31-[49].
+   </assert>
+
+   <!-- Verify rule C32-[51] -->
+   <assert test='not(cda:code) or cda:code[@code and @codeSystem="2.16.840.1.113883.5.111"]'>
+     Error: A HITSP/C32 Contact Relationship should be recorded in the code element beneath the Guardian element. If the code is present, the code value shall be drawn from the HL7 PersonalRelationshipRoleType value set (2.16.840.1.113883.1.11.19563) drawn from the HL7 RoleCode code system (2.16.840.1.113883.5.111). There are 72 possible codes in the value set (e.g. GRMTH, STPDAU, etc). CHECK list.
+     See Section 2.2.1.4.2 rule C31-[51]. 
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Support Participant Contacts -->
+
+ <rule context='cda:ClinicalDocument/cda:participant/cda:associatedEntity'>
+
+   <assert test='../cda:time'>
+     Error: The HITSP/C32 Support Participant data element shall contain a Date element.
+     See Table 2.2.1.4-2
+   </assert>
+
+   <assert test='cda:associatedPerson/cda:name/* or cda:associatedPerson/cda:name[string-length(normalize-space()) > 2]'>
+     Error: The HITSP/C32 Support Participant Contact element shall contain a non-empty C32 Contact Name element.
+     See Table 2.2.1.4-2
+   </assert>
+
+   <!-- Verify rule C32-[46] - Covered by previous rules -->
+
+   <!-- Verify rule C32-[47] - Covered by previous rules -->
+
+   <!-- Verify rule C32-[49] -->
+   <assert test='self::cda:associatedEntity[@classCode="AGNT" or @classCode="CAREGIVER" 
+                 or @classCode="ECON" or @classCode="NOK" or @classCode="PRS"]'>
+     Error: The C32 Contact Type element shall be expressed in the classCode of the Contact role and shall be from the following list: AGNT (authorized to act on behalf of the patient), CAREGIVER (care at home), ECON (emergency contact), NOK (next of kin), PRS (personal). Guardian contacts (GUARD) are reported under the Patient element.
+     See Section 2.2.1.4 rule C31-[49].
+   </assert>
+
+   <!-- Verify rule C32-[51] -->
+   <assert test='not(cda:code) or cda:code[(@code and @codeSystem="2.16.840.1.113883.5.111") or @nullFlavor or cda:originalText]'>
+     Error: A HITSP/C32 Contact Relationship should be recorded in the code element beneath the Participant Contact element. If the code is present, the code value shall be drawn from the HL7 PersonalRelationshipRoleType value set (2.16.840.1.113883.1.11.19563) drawn from the HL7 RoleCode code system (2.16.840.1.113883.5.111). There are 72 possible codes in the value set (e.g. GRMTH, STPDAU, etc.). CHECK list!
+     See Section 2.2.1.4.2 rule C31-[51]. 
+   </assert>
+
+
+ </rule>
+
+</pattern>
+
+
+
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.3-warning'>
+
+
+ <!-- New Context for Guardian -->
+
+ <rule context='cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient/cda:guardian'>
+
+   <!-- Verify rule C32-[50] -->
+   <assert test='cda:code'>
+     Warning: A HITSP/C32 Contact Relationship should be recorded in the code element beneath the Guardian element. If the code element is present, the code value shall be drawn from the HL7 PersonalRelationshipRoleType value set (2.16.840.1.113883.1.11.19563) drawn from the HL7 RoleCode code system (2.16.840.1.113883.5.111). There are 72 possible codes in the value set (e.g. GRMTH, STPDAU, etc). CHECK list.
+     See Section 2.2.1.4.2 rule C31-[51].
+   </assert>
+
+ </rule>
+
+   <!-- New Context for Support Participant Contact -->
+
+ <rule context='cda:ClinicalDocument/cda:participant/cda:associatedEntity'>
+
+   <!-- Verify rule C32-[51] -->
+   <assert test='cda:code'>
+     Warning: A HITSP/C32 Contact Relationship should be recorded in the code element beneath the C32 Contact element. If the code is present, the code value shall be drawn from the HL7 PersonalRelationshipRoleType value set (2.16.840.1.113883.1.11.19563) drawn from the HL7 RoleCode code system (2.16.840.1.113883.5.111). There are 72 possible codes in the value set (e.g. GRMTH, STPDAU, etc.). CHECK list.
+     See Section 2.2.1.4.2 rule C31-[51]. 
+   </assert>
+
+ </rule>
+
+</pattern>
+
+
+
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.3-note'>
+
+
+ <!-- New Context for Guardian -->
+
+ <rule context='cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient/cda:guardian'>
+
+    <assert test='cda:guardianPerson/cda:name[@use] and cda:guardianPerson/cda:name/child::*[@qualifier]'>
+     NOTE: The HITSP/C32 Patient Guardian element shall contain a non-empty Guardian Name element. The Guardian Name may contain a use attribute and all of the Name parts may contain a qualifier attribute. Use and qualifier attributes may be set with the same values as specified for the Patient Name element.
+     See Table 2.2.1.4-2 and Section 2.2.1.1.1.
+   </assert>
+
+   <!-- Verify rule C32-[48] -->
+   <assert test='parent::cda:patient[count(child::guardian) &gt; 1]'>
+     NOTE: A patient may have more than one Guardian.
+     See Section 2.2.1.4 rule C31-[48].
+   </assert>
+
+ </rule>
+
+   <!-- New Context for Support Participant Contact -->
+
+ <rule context='cda:ClinicalDocument/cda:participant/cda:associatedEntity'>
+
+ </rule>
+
+</pattern>
+

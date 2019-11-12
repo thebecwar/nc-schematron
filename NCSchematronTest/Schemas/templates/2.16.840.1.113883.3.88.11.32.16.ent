@@ -1,0 +1,138 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.16 -->
+<!-- HITSP/C32 Results Module -->
+
+
+<!-- Errors Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.16-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.16"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.14"]
+             and self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"]'>
+     Error: The HITSP/C32 templateId for a Result observation (2.16.840.1.113883.3.88.11.32.16) is in the wrong location. A HITSP/C32 Result observation shall be represented as a CCD Result observation (2.16.840.1.113883.10.20.1.31) under a CCD Results section (2.16.840.1.113883.10.20.1.14). The C32 templateId for Result observation may optionally be included on the CCD Result observation element.
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>   
+   
+ </rule>
+
+
+<!-- New context for Results Observation --> 
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.16"]'>
+
+   <assert test='cda:id'>
+     Error: A HITSP/C32 Results observation shall contain a C32 Result ID element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='cda:effectiveTime'>
+     Error: A HITSP/C32 Results observation shall contain a C32 Result DateTime element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='cda:code'>
+     Error: A HITSP/C32 Results observation shall contain a C32 Result Type element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='cda:value'>
+     Error: A HITSP/C32 Results observation shall contain a C32 Result Value element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='not(cda:statusCode) or cda:statusCode[@code="completed" or @code="active" 
+     or @code="held" or @code="aborted" or @code="cancelled" or @code="new" or @code="suspended"]'>
+     Error: A HITSP/C32 Result Status data element shall contain a code derived from the HL7 ActStatusNormal code system (2.16.840.1.113883.11.15936). Usual codes are: completed (completed result), active (in-progress result), held (pending release). Four other ActStatusNormal codes are: aborted, cancelled, new, suspended. The element type for statusCode is CS (code simple) so the codeSystem attribute is not permitted.
+     See Section 2.2.1.16.1 rule C32-[201].
+   </assert>
+ 
+ </rule>
+
+</pattern>
+
+
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.16-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without C32 tempateIds -->
+
+ <!-- Set New context without templateIds -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.14"]
+             and self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"]]'>
+
+   <assert test='cda:id'>
+     Constraint Violation: A HITSP/C32 Results observation shall contain a C32 Result ID element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='cda:effectiveTime'>
+     Constraint Violation: A HITSP/C32 Results observation shall contain a C32 Result DateTime element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='cda:code'>
+     Constraint Violation: A HITSP/C32 Results observation shall contain a C32 Result Type element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='cda:value'>
+     Constraint Violation: A HITSP/C32 Results observation shall contain a C32 Result Value element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='not(cda:statusCode) or cda:statusCode[@code="completed" or @code="active" 
+     or @code="held" or @code="aborted" or @code="cancelled" or @code="new" or @code="suspended"]'>
+     Constraint Violation: A HITSP/C32 Result Status data element shall contain a code derived from the HL7 ActStatusNormal code system (2.16.840.1.113883.11.15936). Usual codes are: completed (completed result), active (in-progress result), held (pending release). Four other ActStatusNormal codes are: aborted, cancelled, new, suspended. The element type for statusCode is CS (code simple) so the codeSystem attribute is not permitted.
+     See Section 2.2.1.16.1 rule C32-[201].
+   </assert>
+ 
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.16-warning'>
+
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.14"]
+             and self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"]]'> 
+
+   <assert test='cda:statusCode'>
+     Warning: A HITSP/C32 Result observation should contain a Result Status element. 
+     See Section 2.2.1.16 Table 2.2.1.16-2.
+   </assert>
+
+   <assert test='cda:code[@code and (@codeSystem="2.16.840.1.113883.6.1" or @codeSystem="2.16.840.1.113883.6.96")]'>
+     Warning: A HITSP/C32 Result Type element should be selected from the LOINC (2.16.840.1.113883.6.1) or SNOMED CT (2.16.840.1.113883.6.96) code systems. CHECK list!
+     See Section 2.2.1.16.2 rule C32-[202]
+   </assert>
+ 
+ </rule>
+
+</pattern>
+
+
+
+<!-- Notes Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.16-note'> 
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.14"]
+             and self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.31"]]'>
+ 
+ </rule>
+
+</pattern>
+
+

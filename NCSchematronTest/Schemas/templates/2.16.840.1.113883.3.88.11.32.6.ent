@@ -1,0 +1,270 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.6 -->
+<!-- HITSP/C32 Allergies and Drug Sensitivities Module -->
+
+
+<!-- Pattern for Errors -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.6-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.6"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]'>
+     Error: The HITSP/C32 templateId for Allergy and Drug Sensitivities (2.16.840.1.113883.3.88.11.32.6) is in the wrong location. A HITSP C32 Allergy and Drug Sensitivities module (2.16.840.1.113883.3.88.11.32.6) shall be represented as a CCD Problem act (2.16.840.1.113883.10.20.1.27) under a CCD Alerts section (2.16.840.1.113883.10.20.1.2). The C32 templateId for Allergy and Drug Sensitivities may optionally be included on the CCD Problem act element.
+     See HITSP/C32 Section 2.2.1.7 and Figure 2.2.1.7-2.
+   </assert>
+
+ </rule>
+
+
+   <!-- Verify that the Required (R) items of Table 2.2.1.7-2 are satisfied -->
+
+   <!-- Change Context to Adverse Event Entry -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.6"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]'>
+
+   <!-- Item 6.02 Adverse Event Type -->
+   <assert test='cda:code[@codeSystem="2.16.840.1.113883.6.96"] 
+             and cda:code[@code="420134006" or @code="418038007" or @code="419511003" or @code="418471000"
+                       or @code="419199007" or @code="416098002" or @code="414285001" or @code="59037007"
+                       or @code="235719002"]'>
+     Error: A HITSP/C32 Adverse Event Entry data element shall contain an Adverse Event Type code element with code set to a limited subset of SNOMED CT (2.16.840.1.113883.6.96) terms as presented in HITSP/C32 Table 2.2.1.7.1-2.
+     See Table 2.2.1.7-2 and Section 2.2.1.7.1 rule C32-[88]
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Product -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.6"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:participant[@typeCode="CSM"]/cda:participantRole[@classCode="MANU"]/cda:playingEntity[@classCode="MMAT"]'>
+
+   <!-- Item 6.03 Product - FreeText -->
+   <assert test='cda:name'>
+     Error: A HITSP/C32 Product data element shall contain a Product Free-Text element to name or describe the product causing the reaction. 
+     See Table 2.2.1.7-2
+   </assert>
+
+   <!-- Item 6.04 Product Coded -->
+   <assert test='not(cda:code) or cda:code[@codeSystem and @code]'>
+     Error: A HITSP/C32 Product Coded data element shall be coded to UNII for Food and substance allergies, or RxNorm when to medications, or NDF-RT when to classes of medications. CHECK codes!
+     See Section 2.2.1.7.2 rule C32-[89]
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Reaction -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.6"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:entryRelationship[@typeCode="MFST"]/cda:observation[templateId/@root="2.16.840.1.113883.10.20.1.54"]'>
+
+   <assert test='not(cda:value) or cda:value[@codeSystem="2.16.840.1.113883.6.96" and @code]'>
+   Error: A C32 Reaction Coded data element shall have its value coded using the VA/KP Problem List Subset of SNOMED CT (2.16.840.1.113883.6.96) and shall be terms that descend from the clinical finding (404684003) concept. CHECK list of codes.
+   See Section 2.2.1.7.3 rule C32-[90].
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Reaction Severity -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.6"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:entryRelationship[@typeCode="MFST"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.54"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.55"]'>
+
+   <assert test='not(cda:value) 
+                 or cda:value[@codeSystem="2.16.840.1.113883.6.96" 
+                  and (@code="255604002" or @code="371923003" or @code="6736007" 
+                    or @code="371924009" or @code="24484000" or @code="399166001")]'>
+   Error: A C32 Reaction Severity data element shall have its value coded to SNOMED CT (2.16.840.1.113883.6.96) terms that descend from the severities (272141005) concept. HITSP/C32 Table 2.2.1.7.4-1 lists the SNOMED codes for: mild, mild to moderate, moderate, moderate to severe, severe, and fatal.
+   See Section 2.2.1.7.4 rule C32-[91].
+   </assert>
+
+ </rule>
+
+</pattern>
+
+
+
+<!-- Pattern for Warnings -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.6-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without tempateIds -->
+
+ <!-- Set New context for Providers without templateIds -->
+
+
+   <!-- Verify that the Required (R) items of Table 2.2.1.7-2 are satisfied -->
+
+   <!-- Change Context to Adverse Event Entry -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]'>
+
+   <!-- Item 6.02 Adverse Event Type -->
+   <assert test='cda:code[@codeSystem="2.16.840.1.113883.6.96"] 
+             and cda:code[@code="420134006" or @code="418038007" or @code="419511003" or @code="418471000"
+                       or @code="419199007" or @code="416098002" or @code="414285001" or @code="59037007"
+                       or @code="235719002"]'>
+     Constraint Violation: A HITSP/C32 Adverse Event Entry data element shall contain an Adverse Event Type code element with code set to a limited subset of SNOMED CT (2.16.840.1.113883.6.96) terms as presented in HITSP/C32 Table 2.2.1.7.1-2.
+     See Table 2.2.1.7-2 and Section 2.2.1.7.1 rule C32-[88]
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Product -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:participant[@typeCode="CSM"]/cda:participantRole[@classCode="MANU"]/cda:playingEntity[@classCode="MMAT"]'>
+
+   <!-- Item 6.03 Product - FreeText -->
+   <assert test='cda:name'>
+     Constraint Violation: A HITSP/C32 Product data element shall contain a Product Free-Text element to name or describe the product causing the reaction. 
+     See Table 2.2.1.7-2
+   </assert>
+
+   <!-- Item 6.04 Product Coded -->
+   <assert test='not(cda:code) or cda:code[@codeSystem and @code]'>
+     Constraint Violation: A HITSP/C32 Product Coded data element shall be coded to UNII for Food and substance allergies, or RxNorm when to medications, or NDF-RT when to classes of medications. CHECK codes!
+     See Section 2.2.1.7.2 rule C32-[89]
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Reaction -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:entryRelationship[@typeCode="MFST"]/cda:observation[templateId/@root="2.16.840.1.113883.10.20.1.54"]'>
+
+   <assert test='not(cda:value) or cda:value[@codeSystem="2.16.840.1.113883.6.96" and @code]'>
+   Constraint Violation: A C32 Reaction Coded data element shall have its value coded using the VA/KP Problem List Subset of SNOMED CT (2.16.840.1.113883.6.96) and shall be terms that descend from the clinical finding (404684003) concept. CHECK list of codes.
+   See Section 2.2.1.7.3 rule C32-[90].
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Reaction Severity -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:entryRelationship[@typeCode="MFST"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.54"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.55"]'>
+
+   <assert test='not(cda:value) 
+                 or cda:value[@codeSystem="2.16.840.1.113883.6.96" 
+                  and (@code="255604002" or @code="371923003" or @code="6736007" 
+                    or @code="371924009" or @code="24484000" or @code="399166001")]'>
+   Constraint Violation: A C32 Reaction Severity data element shall have its value coded to SNOMED CT (2.16.840.1.113883.6.96) terms that descend from the severities (272141005) concept. HITSP/C32 Table 2.2.1.7.4-1 lists the SNOMED codes for: mild, mild to moderate, moderate, moderate to severe, severe, and fatal.
+   See Section 2.2.1.7.4 rule C32-[91].
+   </assert>
+
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+
+
+<!-- Pattern for Warnings -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.6-warning'>
+
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]'>
+
+   <assert test='cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]'>
+   Warning: A HITSP/C32 Allergies and Sensitivities module (2.16.840.1.113883.3.88.11.32.6) should contain a subject (SUBJ) entryRelationship that contains a C32 Adverse Event Entry represented as a CCD Alert Observation (2.16.840.1.113883.10.20.1.18). 
+   See Section 2.2.1.7 and Table 2.2.1.7-2.
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Adverse Event Entry -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]'>
+
+   <!-- Item 6.01 Adverse Event Type -->
+   <assert test='cda:effectiveTime'>
+     Warning: A HITSP/C32 Adverse Event Entry data element should contain a C32 Adverse Event Date element.
+     See Table 2.2.1.7-2
+   </assert>
+
+   <!-- Product -->
+   <assert test='cda:participant[@typeCode="CSM"]/cda:participantRole[@classCode="MANU"]/cda:playingEntity[@classCode="MMAT"]'>
+     Warning: A HITSP/C32 Adverse Event Entry data element should contain a C32 Product data element.
+     See Table 2.2.1.7-2
+   </assert>
+
+   <!-- Item Reaction -->
+   <assert test='cda:entryRelationship[@typeCode="MFST"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.54"]'>
+     Note: A HITSP/C32 Adverse Event Entry data element may contain a Reaction data element.
+     See Table 2.2.1.7-2
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Product -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:participant[@typeCode="CSM"]/cda:participantRole[@classCode="MANU"]/cda:playingEntity[@classCode="MMAT"]'>
+
+   <!-- Item 6.04 Product Coded -->
+   <assert test='cda:code'>
+     Warning: A HITSP/C32 Product data element should contain a Product Coded data element.
+     See Table 2.2.1.7-2
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Reaction -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:entryRelationship[@typeCode="MFST"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.54"]'>
+
+   <!-- Item 6.05  -->
+   <assert test='cda:text'>
+     Warning: A HITSP/C32 Reaction data element should contain a Reaction Free-Text data element to describe the reaction.
+     See Table 2.2.1.7-2
+   </assert>
+
+   <!-- Item 6.06  -->
+   <assert test='cda:value'>
+     Warning: A HITSP/C32 Reaction data element should contain a Reaction Coded data element.
+     See Table 2.2.1.7-2
+   </assert>
+
+   <!-- Item Severity  -->
+   <assert test='cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.55"]'>
+     Warning: A HITSP/C32 Reaction data element should contain a Reaction Severity data element.
+     See Table 2.2.1.7-2
+   </assert>
+
+ </rule>
+
+   <!-- Change Context to Reaction Severity -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.2"]
+             and self::cda:act [cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.18"]/cda:entryRelationship[@typeCode="MFST"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.54"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.55"]'>
+
+   <!-- Item 6.07  -->
+   <assert test='cda:text'>
+     Warning: A HITSP/C32 Reaction Severity data element should contain a Severity Free-Text data element to describe the severity.
+     See Table 2.2.1.7-2
+   </assert>
+
+   <!-- Item 6.08  -->
+   <assert test='cda:value'>
+     Warning: A HITSP/C32 Reaction Severity data element should contain a Severity Coded data element.
+     See Table 2.2.1.7-2
+   </assert>
+
+ </rule>
+ 
+</pattern>
+
+
+
+<!-- Pattern for Notes -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.6-note'>
+</pattern>
+

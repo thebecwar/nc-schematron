@@ -1,0 +1,309 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.7 -->
+<!-- HITSP/C32 Conditions Module -->
+
+<!-- Errors Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.7-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.7"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]'>
+     Error: The HITSP/C32 templateId for Conditions - Problem entry (2.16.840.1.113883.3.88.11.32.7) is in the wrong location. The HITSPC32 Conditions module (2.16.840.1.113883.3.88.11.32.7) shall be represented as a CCD Problem act (2.16.840.1.113883.10.20.1.27) under a CCD Problems section (2.16.840.1.113883.10.20.1.11). The C32 templateId for Conditions - Problem entry may optionally be included on the CCD Problem act element.
+     See HITSP/C32 Section 2.2.1.8 and Section 2.2.1.8.3.
+   </assert>
+
+    <!-- Problem Entry -->
+   <assert test='cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]'>
+     Error: The HITSPC32 Conditions module (2.16.840.1.113883.3.88.11.32.7) represented as a CCD Problem Act (2.16.840.1.113883.10.20.1.27) shall contain a subject (SUBJ) entryRelationship with target a HITSP/C32 Problem Entry data element represented as a CCD Problem Observation (2.16.840.1.113883.10.20.1.28).
+     See Table 2.2.1.8-2
+   </assert>
+   
+ </rule>
+
+
+ <!-- New Context for Problem Entry -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.7"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]'>
+
+   <!-- Item 7.03 Problem Name -->
+   <assert test='cda:text/cda:reference/@value'>
+     Error: A C32 Problem Entry data element element shall contain a free text element to record the C32 Problem Name. The Problem Name element shall contain a reference element whose value attribute points to narrative text in the parent section containing the name of the problem.
+     See Table 2.2.1.8-2 and Section 2.2.1.8.3
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Problem Type Code -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.7"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]/cda:code'>
+
+   <assert test='@codeSystem="2.16.840.1.113883.6.96" '>
+     Error: A C32 Problem Type shall contain a codeSystem attribute that identifies the SNOMED CT codeSystem (2.16.840.1.113883.6.96).
+     See Section 2.2.1.8.2 rule C32-[92]
+   </assert>
+
+   <assert test='@code="404684003" or @code="418799008" or @code="55607006" 
+              or @code="409586006" or @code="64572001" or @code="282291009" 
+              or @code="248536006"'>
+     Error: A C32 Problem Type shall shall contain a code that identifies the SNOMED CT code for one of the following seven conditions: Finding (404684003), Symptom (418799008), Problem (55607006), Complaint (409586006), Condition (64572001), Diagnosis (282291009, Functional limitation (248536006).
+     See Section 2.2.1.8.2 rule C32-[93] and Table 2.2.1.8.2-1
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Problem Code cda:value -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.7"]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]/cda:value'>
+
+   <assert test='@xsi:type="CD" and @codeSystem="2.16.840.1.113883.6.96" and @code'>
+     Error: A C32 Problem Code shall be recorded in a cda:value element and coded using the VA/KP Problem List Subset of SNOMED CT (2.16.840.1.113883.6.96), and shall use SNOMED terms that descend from the clinical finding (404684003) concept. CHECK the problem list subset!
+     See Section 2.2.1.8.4 rule C32-[94]
+   </assert>
+
+   <assert test='@xsi:type="CD"'>
+     Error: A C32 Problem Code shall be recorded in the cda:value element using an HL7 CD data type. 
+     See Section 2.2.1.8.4 rule C32-[95]
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Treating Provider -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.7"]/cda:performer'>
+
+   <assert test='true()'>
+     Error: A C32 Treating Provider data element shall be recorded in a cda:performer element under the C32 Conditions module.
+     See Section 2.2.1.8.5 rule C32-[96]
+   </assert>
+
+   <assert test='cda:assignedEntity/cda:id'>
+     Error: A C32 Treating Provider data element shall contain a cda:assignedEntity/cda:id element to identify the treating provider. This identifier shall be the identifier of one of the providers listed in the C32 Providers module.
+     See Section 2.2.1.8.5 rule C32-[98] and Section 2.2.1.4.
+   </assert>
+
+ <!-- The following XPath 2.0 expression cannot be evaluated in XPath 1.0; Schematron won't accept the "concat" function in a path!
+
+   <assert test='cda:assignedEntity/cda:id/concat(@root,@extension) = /cda:ClinicalDocument/cda:documentationOf/cda:serviceEvent/cda:performer/cda:assignedEntity/cda:id/concat(@root,@extension)'>
+     Constraint Violation: A C32 Treating Provider data element shall contain a cda:assignedEntity/cda:id element to identify the treating provider. This identifier shall be the identifier of one of the providers listed in the C32 Providers module.
+     See Section 2.2.1.8.5 rule C32-[98] and Section 2.2.1.4.
+   </assert>
+
+So I commented out this Assert until we can figure out an equivalent XPath 1.0 expression. I've replaced it below with a compound test on @root and @extension knowing that this could return valid even if there is a mis-match among provider ids.
+ -->
+
+   <assert test='(cda:assignedEntity/cda:id/@root = /cda:ClinicalDocument/cda:documentationOf/cda:serviceEvent/cda:performer/cda:assignedEntity/cda:id/@root)
+              and (cda:assignedEntity/cda:id/@extension = /cda:ClinicalDocument/cda:documentationOf/cda:serviceEvent/cda:performer/cda:assignedEntity/cda:id/@extension)'>
+     Constraint Violation: A C32 Treating Provider data element shall contain a cda:assignedEntity/cda:id element to identify the treating provider. This identifier shall be the identifier of one of the providers listed in the C32 Providers module.
+     See Section 2.2.1.8.5 rule C32-[98] and Section 2.2.1.4.
+   </assert>
+
+ </rule>
+
+</pattern>
+
+
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.7-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without tempateIds -->
+
+ <!-- Set New context without templateIds -->
+
+<rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]'>
+ 
+   <!-- Problem Entry -->
+   <assert test='cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]'>
+     Constraint Violation: The HITSPC32 Conditions module (2.16.840.1.113883.3.88.11.32.7) represented as a CCD Problem Act (2.16.840.1.113883.10.20.1.27) shall contain a subject (SUBJ) entryRelationship with target a HITSP/C32 Problem Entry data element represented as a CCD Problem Observation (2.16.840.1.113883.10.20.1.28).
+     See Table 2.2.1.8-2
+   </assert>
+   
+ </rule>
+
+
+ <!-- New Context for Problem Entry -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]'>
+
+   <!-- Item 7.03 Problem Name -->
+   <assert test='cda:text/cda:reference/@value'>
+     Constraint Violation: A C32 Problem Entry data element element shall contain a free text element to record the C32 Problem Name. The Problem Name element shall contain a reference element whose value attribute points to narrative text in the parent section containing the name of the problem.
+     See Table 2.2.1.8-2 and Section 2.2.1.8.3
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Problem Type Code -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]/cda:code'>
+
+   <assert test='@codeSystem="2.16.840.1.113883.6.96" '>
+     Constraint Violation: A C32 Problem Type shall contain a codeSystem attribute that identifies the SNOMED CT codeSystem (2.16.840.1.113883.6.96).
+     See Section 2.2.1.8.2 rule C32-[92]
+   </assert>
+
+   <assert test='@code="404684003" or @code="418799008" or @code="55607006" 
+              or @code="409586006" or @code="64572001" or @code="282291009" 
+              or @code="248536006"'>
+     Constraint Violation: A C32 Problem Type shall shall contain a code that identifies the SNOMED CT code for one of the following seven conditions: Finding (404684003), Symptom (418799008), Problem (55607006), Complaint (409586006), Condition (64572001), Diagnosis (282291009, Functional limitation (248536006).
+     See Section 2.2.1.8.2 rule C32-[93] and Table 2.2.1.8.2-1
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Problem Code cda:value -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]/cda:value'>
+
+   <assert test='@xsi:type="CD" and @codeSystem="2.16.840.1.113883.6.96" and @code'>
+     Constraint Violation: A C32 Problem Code shall be recorded in a cda:value element and coded using the VA/KP Problem List Subset of SNOMED CT (2.16.840.1.113883.6.96), and shall use SNOMED terms that descend from the clinical finding (404684003) concept. CHECK the problem list subset!
+     See Section 2.2.1.8.4 rule C32-[94]
+   </assert>
+
+   <assert test='@xsi:type="CD"'>
+     Constraint Violation: A C32 Problem Code shall be recorded in the cda:value element using an HL7 CD data type. 
+     See Section 2.2.1.8.4 rule C32-[95]
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Treating Provider -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:performer'>
+
+   <assert test='true()'>
+     Constraint Violation: A C32 Treating Provider data element shall be recorded in a cda:performer element under the C32 Conditions module.
+     See Section 2.2.1.8.5 rule C32-[96]
+   </assert>
+
+   <assert test='cda:assignedEntity/cda:id'>
+     Constraint Violation: A C32 Treating Provider data element shall contain a cda:assignedEntity/cda:id element to identify the treating provider. This identifier shall be the identifier of one of the providers listed in the C32 Providers module.
+     See Section 2.2.1.8.5 rule C32-[98] and Section 2.2.1.4.
+   </assert>
+
+ <!-- The following XPath 2.0 expression cannot be evaluated in XPath 1.0; Schematron won't accept the "concat" function in a path!
+
+   <assert test='cda:assignedEntity/cda:id/concat(@root,@extension) = /cda:ClinicalDocument/cda:documentationOf/cda:serviceEvent/cda:performer/cda:assignedEntity/cda:id/concat(@root,@extension)'>
+     Constraint Violation: A C32 Treating Provider data element shall contain a cda:assignedEntity/cda:id element to identify the treating provider. This identifier shall be the identifier of one of the providers listed in the C32 Providers module.
+     See Section 2.2.1.8.5 rule C32-[98] and Section 2.2.1.4.
+   </assert>
+
+So I commented out this Assert until we can figure out an equivalent XPath 1.0 expression. I've replaced it below with a compound test on @root and @extension knowing that this could return valid even if there is a mis-match among provider ids.
+ -->
+
+   <assert test='(cda:assignedEntity/cda:id/@root = /cda:ClinicalDocument/cda:documentationOf/cda:serviceEvent/cda:performer/cda:assignedEntity/cda:id/@root)
+              and (cda:assignedEntity/cda:id/@extension = /cda:ClinicalDocument/cda:documentationOf/cda:serviceEvent/cda:performer/cda:assignedEntity/cda:id/@extension)'>
+     Constraint Violation: A C32 Treating Provider data element shall contain a cda:assignedEntity/cda:id element to identify the treating provider. This identifier shall be the identifier of one of the providers listed in the C32 Providers module.
+     See Section 2.2.1.8.5 rule C32-[98] and Section 2.2.1.4.
+   </assert>
+
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.7-warning'>
+
+
+ <!-- Initial Context for HITSP/C32 Conditions Module -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]'>
+
+ </rule>
+
+ <!-- New Context for Problem Entry -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]'>   
+
+   <!-- Item 7.01 Problem Date-->
+   <assert test='cda:effectiveTime/cda:low'>
+     Warning: A HITSP/C32 Problem Entry data element should contain a Problem Date element. The onset date shall be recorded in the low element of the effective time. The resolution date shall be recorded in the high element of the effective time. The absence of a high element indicates that the problem is not yet resolved. If the problem is known to be resolved, but the date is unknown, then the high element shall contain a nullFlavor attribute set to UNK.
+     See Table 2.2.1.8-2 and Section 2.2.1.8.1.
+   </assert>  
+
+   <!-- Item 7.02 Problem Type-->
+   <assert test='cda:code/@codeSystem'>
+     Warning: A HITSP/C32 Problem Entry data element should contain a Problem Type element with the codeSystem set to SNOMED CT and with the code attribute set to one of seven specified values.
+     See Table 2.2.1.8-2 and Section 2.2.1.8.2.
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Treating Provider -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:performer'>
+
+ </rule>
+
+</pattern>
+
+
+
+<!-- Notes Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.7-note'>
+
+ <!-- Initial Context for HITSP/C32 Conditions Module -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]'>
+
+   <!-- Item 7.05 Treating Provider -->
+   <assert test='cda:performer'>
+     Note: A C32 Conditions module may contain a CDA performer element to record the optional C32 Treating Provider element. This identifier shall be the identifier of one of the providers listed in the C32 Providers module.
+     See Table 2.2.1.8-2 and Section 2.2.1.8.5
+   </assert>
+
+ </rule>
+
+ <!-- New Context for Problem Entry -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:entryRelationship[@typeCode="SUBJ"]/cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.28"]'> 
+
+   <!-- Item 7.04 Problem Code -->
+   <assert test='cda:value'>
+     Note: A C32 Problem Entry data element element may contain a cda:value element to record the optional C32 Problem Code element. 
+     See Table 2.2.1.8-2 and Section 2.2.1.8.4.
+   </assert>
+
+ </rule>
+
+
+ <!-- New Context for Treating Provider -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.11"] 
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.27"]]/cda:performer'>
+
+   <assert test='cda:time'>
+     Note: A C32 Treating Provider data element may contain a cda:time element to record the time over which this provider treated the condition. 
+     See Section 2.2.1.8.5 rule C32-[97]
+   </assert>
+
+ </rule>
+
+</pattern>
+

@@ -1,0 +1,247 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.13 -->
+<!-- HITSP/C32 Advance Directives Module -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.13-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.13"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.1"]
+             and self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.17"]'>
+     Error: The HITSP/C32 templateId for Advance Directives (2.16.840.1.113883.3.88.11.32.13) is in the wrong location. A HITSP/C32 Advance Directive data element shall be represented as a CCD Advance Directive Observation (2.16.840.1.113883.10.20.1.17) under a CCD Advance Directives section (2.16.840.1.113883.10.20.1.1). The C32 templateId for Advance Directives may optionally be included on the CCD Advance Directive Observation element.
+     See Section 2.2.1.13.
+   </assert>
+
+ </rule>
+
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.13"]'>
+
+   <!-- Verify item 12.02 -->
+   <assert test='cda:code/cda:originalText'>
+     Error: A HITSP/C32 Advance Directive shall contain an Advance Directive Free Text Type element.   
+     See Table 2.2.1.13-2.
+   </assert>
+
+   <!-- Verify item 12.03 -->
+   <assert test='cda:effectiveTime'>
+     Error: A HITSP/C32 Advance Directive shall contain an Effective Date element.   
+     See Table 2.2.1.13-2.
+   </assert>
+
+   <!-- Verify item 12.04 -->
+   <assert test='cda:participant/cda:participantRole'>
+     Error: A HITSP/C32 Advance Directive shall contain a Custodian of the Document element.   
+     See Table 2.2.1.13-2.
+   </assert>
+
+   <!-- Verify rule C32-[169]  -->
+   <assert test='not(cda:code/@code) or cda:code[@code and @codeSystem="2.16.840.1.113883.6.96"]'>
+     Error: A HITSP/C32 Advance Directive with Coded Type shall contain an advance directive code from from the advance directive subset of SNOMED CT (2.16.840.1.113883.6.96). CHECK list of values. 
+     See Section 2.2.1.13.1 rule C32-[169].
+   </assert>
+
+   <!-- Verify rule C32-[171] -->
+   <assert test='cda:code/cda:originalText/cda:reference/@value'>
+     Error: The human readable description of the type of advance directive shall appear in the narrative text of the parent section and shall be pointed to by the value attribute of the reference element inside the originalText element of the code element.   
+     See Section 2.2.1.13.2 Rule C32-[171].
+   </assert>
+
+   <!-- Verify rule C32-[172] -->
+   <assert test='cda:effectiveTime/cda:low'>
+     Error: The starting time of the C32 Advance Directive shall be recorded in the low element of the Effective Date.   
+     See Section 2.2.1.13.3 Rule C32-[172].
+   </assert>
+
+   <!-- Verify rule C32-[173] -->
+   <assert test='cda:effectiveTime/cda:low[@value or @nullFlavor="UNK"]'>
+     Error: If the starting time of an Advance Directive is unknown, then the low element of its Effective Date shall have a nullFlavor attribute set to UNK.   
+     See Section 2.2.1.13.3 Rule C32-[173].
+   </assert>
+
+   <!-- Verify rule C32-[174] -->
+   <assert test='cda:effectiveTime/cda:high'>
+     Error: The endingtime of the C32 Advance Directive shall be recorded in the high element of the Effective Date.   
+     See Section 2.2.1.13.3 Rule C32-[174].
+   </assert>
+
+   <!-- Verify rule C32-[175] and C32-[176] -->
+   <assert test='cda:effectiveTime/cda:high[@value or @nullFlavor="UNK" or @nullFlavor="NA"]'>
+     Error: If the ending time of an Advance Directive is unknown, then the high element of its Effective Date shall have a nullFlavor attribute set to UNK. If the Advance Directive does not have a specified ending time, then the high element of its Effective Date shall have a nullFlavor attribute set to NA.
+     See Section 2.2.1.13.3 Rule C32-[175] and C32-[176].
+   </assert>
+
+   <!-- Verify rule C32-[177] -->
+   <assert test='cda:participant/cda:participantRole'>
+     Error: Information required to obtain a copy of a C32 Advance Directive shall be recorded in the Custodian of the Document data element.   
+     See Section 2.2.1.13.4 Rule C32-[177].
+   </assert>
+
+   <!-- Verify rule C32-[178] -->
+   <assert test='cda:participant[@typeCode="CST"]/cda:participantRole'>
+     Error: A C32 Custodian of the Document data element shall have participant typeCode set to CST.   
+     See Section 2.2.1.13.4 Rule C32-[178].
+   </assert>
+
+   <!-- Verify rule C32-[179] -->
+   <assert test='cda:participant[@typeCode="CST"]/cda:participantRole[@classCode="AGNT"]'>
+     Error: A C32 Custodian of the Document data element shall have classCode set to AGNT.    
+     See Section 2.2.1.13.4 Rule C32-[179].
+   </assert>
+
+   <!-- Verify rule C32-[182] -->
+   <assert test='cda:participant/cda:participantRole/cda:playingEntity/cda:name'>
+     Error: A C32 Custodian of the Document data element shall contain a playingEntity element and the name of the agent who can provide a copy of the advance directive shall be recorded in the name element.   
+     See Section 2.2.1.13.4 Rule C32-[182].
+   </assert>
+      
+ </rule>
+
+</pattern>
+
+
+
+<!-- Advance Directive Warnings -->
+
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.13-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without tempateIds -->
+
+ <!-- Set New context for Providers without templateIds -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.1"]
+             and self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.17"]]'>
+
+   <!-- Verify item 12.02 -->
+   <assert test='cda:code/cda:originalText'>
+     Constraint Violation: A HITSP/C32 Advance Directive shall contain an Advance Directive Free Text Type element.   
+     See Table 2.2.1.13-2.
+   </assert>
+
+   <!-- Verify item 12.03 -->
+   <assert test='cda:effectiveTime'>
+     Constraint Violation: A HITSP/C32 Advance Directive shall contain an Effective Date element.   
+     See Table 2.2.1.13-2.
+   </assert>
+
+   <!-- Verify item 12.04 -->
+   <assert test='cda:participant/cda:participantRole'>
+     Constraint Violation: A HITSP/C32 Advance Directive shall contain a Custodian of the Document element.   
+     See Table 2.2.1.13-2.
+   </assert>
+
+   <!-- Verify rule C32-[169]  -->
+   <assert test='not(cda:code/@code) or cda:code[@code and @codeSystem="2.16.840.1.113883.6.96"]'>
+     Constraint Violation: A HITSP/C32 Advance Directive with Coded Type shall contain an advance directive code from from the advance directive subset of SNOMED CT (2.16.840.1.113883.6.96). CHECK list of values. 
+     See Section 2.2.1.13.1 rule C32-[169].
+   </assert>
+
+   <!-- Verify rule C32-[171] -->
+   <assert test='cda:code/cda:originalText/cda:reference/@value'>
+     Constraint Violation: The human readable description of the type of advance directive shall appear in the narrative text of the parent section and shall be pointed to by the value attribute of the reference element inside the originalText element of the code element.   
+     See Section 2.2.1.13.2 Rule C32-[171].
+   </assert>
+
+   <!-- Verify rule C32-[172] -->
+   <assert test='cda:effectiveTime/cda:low'>
+     Constraint Violation: The starting time of the C32 Advance Directive shall be recorded in the low element of the Effective Date.   
+     See Section 2.2.1.13.3 Rule C32-[172].
+   </assert>
+
+   <!-- Verify rule C32-[173] -->
+   <assert test='cda:effectiveTime/cda:low[@value or @nullFlavor="UNK"]'>
+     Constraint Violation: If the starting time of an Advance Directive is unknown, then the low element of its Effective Date shall have a nullFlavor attribute set to UNK.   
+     See Section 2.2.1.13.3 Rule C32-[173].
+   </assert>
+
+   <!-- Verify rule C32-[174] -->
+   <assert test='cda:effectiveTime/cda:high'>
+     Constraint Violation: The endingtime of the C32 Advance Directive shall be recorded in the high element of the Effective Date.   
+     See Section 2.2.1.13.3 Rule C32-[174].
+   </assert>
+
+   <!-- Verify rule C32-[175] and C32-[176] -->
+   <assert test='cda:effectiveTime/cda:high[@value or @nullFlavor="UNK" or @nullFlavor="NA"]'>
+     Constraint Violation: If the ending time of an Advance Directive is unknown, then the high element of its Effective Date shall have a nullFlavor attribute set to UNK. If the Advance Directive does not have a specified ending time, then the high element of its Effective Date shall have a nullFlavor attribute set to NA.
+     See Section 2.2.1.13.3 Rule C32-[175] and C32-[176].
+   </assert>
+
+   <!-- Verify rule C32-[177] -->
+   <assert test='cda:participant/cda:participantRole'>
+     Constraint Violation: Information required to obtain a copy of a C32 Advance Directive shall be recorded in the Custodian of the Document data element.   
+     See Section 2.2.1.13.4 Rule C32-[177].
+   </assert>
+
+   <!-- Verify rule C32-[178] -->
+   <assert test='cda:participant[@typeCode="CST"]/cda:participantRole'>
+     Constraint Violation: A C32 Custodian of the Document data element shall have participant typeCode set to CST.   
+     See Section 2.2.1.13.4 Rule C32-[178].
+   </assert>
+
+   <!-- Verify rule C32-[179] -->
+   <assert test='cda:participant[@typeCode="CST"]/cda:participantRole[@classCode="AGNT"]'>
+     Constraint Violation: A C32 Custodian of the Document data element shall have classCode set to AGNT.    
+     See Section 2.2.1.13.4 Rule C32-[179].
+   </assert>
+
+   <!-- Verify rule C32-[182] -->
+   <assert test='cda:participant/cda:participantRole/cda:playingEntity/cda:name'>
+     Constraint Violation: A C32 Custodian of the Document data element shall contain a playingEntity element and the name of the agent who can provide a copy of the advance directive shall be recorded in the name element.   
+     See Section 2.2.1.13.4 Rule C32-[182].
+   </assert>
+      
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+
+
+<!-- Advance Directive Warnings -->
+
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.13-warning'>
+
+
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.1"]
+             and self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.17"]]'>
+
+   <!-- Verify ruleC32-[170]  -->
+   <assert test='cda:code/@code'>
+     Warning: A HITSP/C32 Advance Directive should contain a C32 Advance Directive Coded Type with an explicit code.   
+     See Section 2.2.1.13.1 rule C32-[170].
+   </assert>
+
+   <!-- Verify rule C32-[180] -->
+   <assert test='cda:participant[@typeCode="CST"]/cda:participantRole[@classCode="AGNT"]/cda:addr'>
+     Warning: A C32 Custodian of the Document data element should contain an addr element with address information.   
+     See Section 2.2.1.13.4 Rule C32-[180].
+   </assert>
+
+   <!-- Verify rule C32-[181] -->
+   <assert test='cda:participant[@typeCode="CST"]/cda:participantRole[@classCode="AGNT"]/cda:telecom'>
+     Warning: A C32 Custodian of the Document data element should contain a telecom element with the telephone number or other electronic communications address for the agent.   
+     See Section 2.2.1.13.4 Rule C32-[181].
+   </assert>
+      
+ </rule>
+
+</pattern>
+
+
+
+<!-- Advance Directive notes -->
+
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.13-note'>
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.1"]
+             and self::cda:observation[cda:templateId/@root="2.16.840.1.113883.10.20.1.17"]]'>
+      
+ </rule>
+
+</pattern>
+

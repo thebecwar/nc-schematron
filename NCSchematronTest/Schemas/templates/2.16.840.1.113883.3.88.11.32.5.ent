@@ -1,0 +1,406 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.5 -->
+<!-- HITSP/C32 Insurance Provider Module -->
+
+
+<!-- Errors Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.5-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.5"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]'>
+     Error: The HITSP/C32 templateId for Insurance Payment Provider (2.16.840.1.113883.3.88.11.32.5) is in the wrong location. A C32 Insurance Payment Providers data element shall be represented as a CCD Policy Activity act (2.16.840.1.113883.10.20.1.26) under a CCD Coverage Activity act (2.16.840.1.113883.10.20.1.20) under a CCD Payors section (2.16.840.1.113883.10.20.1.9). The C32 templateId for Insurance Payment Providers may optionally be included on the CCD Policy Activity act. If no insurance payment sources are known, the reason shall be provided as free text in the narrative block (e.g. Not Insured, Payer Unknown, Medicare Pending, et cetera) of the CCD Payers section.
+     See HITSP/C32 Section 2.2.1.6 and Section 2.2.1.6.1.
+   </assert>
+
+ </rule>
+
+
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.5"]'>
+
+   <!-- Payer -->
+   <assert test='cda:performer/cda:assignedEntity'>
+     Error: A HITSP/C32 Payment Providers data element shall contain a  C32 Payer element.
+     See Table 2.2.1.6-2
+   </assert>
+
+   <assert test='cda:performer/cda:assignedEntity/cda:code'>
+     Error: A HITSP/C32 Payment Providers data element shall contain a C32 Financial Responsibility Party Type element.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.11 rule C32-[75].
+   </assert>
+
+   <assert test='cda:performer/cda:assignedEntity/cda:code[@code and @codeSystem="2.16.840.1.113883.5.110"]'>
+     Error: A HITSP/C32 Financial Responsibility Party Type element shall have a code attribute that contains a value from the HL7 RoleClassRelationshipFormal vocabulary (2.16.840.1.113883.5.110). CHECK list.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.11 rule C32-[76].
+   </assert>
+
+   <assert test='not(cda:code[@code="PP"]) or cda:performer/cda:assignedEntity/cda:code[@code="GUAR" or @code="PAT"]'>
+     Error: If the C32 Health Insurance Type of the encompassing C32 Payment Provider (i.e. cda:code) is PP, then the C32 Financial Responsibility Party Type code attribute shall be set to GUAR or PAT to indicate a Guarantor or self-paying patient, respectively.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.11 rule C32-[77].
+   </assert>
+
+   <assert test='not(cda:code) or cda:code[@code="PP"] or cda:performer/cda:assignedEntity/cda:code[@code="PAYOR"]'>
+     Error: If the C32 Health Insurance Type of the encompassing C32 Payment Provider (i.e. cda:code) is anything other than PP, then the C32 Financial Responsibility Party Type code attribute shall be set to PAYOR.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.11 rule C32-[77].
+   </assert>
+
+ </rule>
+
+
+ <!-- New context for Patient Information / Patient -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.5"]/cda:participant[@typeCode="COV"]/cda:participantRole[@classCode="PAT"]'>
+
+   <assert test='cda:code'>
+     Error: A HITSP/C32 Subscribers Patient data element shall contain a C32 Relationship to Subscriber element (i.e. cda:code).
+     See Table 2.2.1.6-2
+   </assert>
+
+   <assert test='cda:code[@code and @codeSystem="2.16.840.1.113883.5.111"]'>
+     Error: A HITSP/C32 Subscribers Patient data element shall contain a C32 Relationship to Subscriber element (i.e. cda:code) with the code attribute taken from the HL7 CoverageRoleType vocabulary (2.16.840.1.113883.5.111). CHECK list.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.8.
+   </assert>
+
+   <assert test='cda:playingEntity/cda:name'>
+     Error: A HITSP/C32 Subscribers Patient data element shall contain a C32 Patient Name element. If this element is empty, then the name shall be assumed equal to the patient name recorded in cda:recordTarget.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.9.
+   </assert>
+
+   <assert test='cda:playingEntity/sdtc:birthTime'>
+     Error: A HITSP/C32 Subscribers Patient data element shall contain a C32 Patient Date of Birth element (sdtc:birthTime). If this element is empty, then the date of birth shall be assumed equal to the patient date of birth recorded in cda:recordTarget.   
+     NOTE: The sdtc:birthTime represents an extension to HL7 CDA Release 2.0.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.10.
+   </assert>
+
+ </rule>
+
+
+ <!-- New context for Subscriber Information / Subscriber -->
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.5"]/cda:participant[@typeCode="HLD"]/cda:participantRole'>
+
+   <assert test='cda:id/@root and cda:id/@extension'>
+     Error: A HITSP/C32 Subscriber Information data element shall contain a C32 Subscriber ID element with both root and extension attributes. The root attribute (OID or GUID) identifies the assigning authority of the extension attribute. The extension attribute is the subscriber identification number.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.13.
+   </assert>
+
+   <assert test='cda:addr/*'>
+     Error: A HITSP/C32 Subscriber Information data element shall contain a non-empty C32 addr element. The address should follow the C32 address format.
+     See Table 2.2.1.6-2 and Section 2.2.1.1.2.
+   </assert>
+
+   <assert test='cda:playingEntity/cda:name/* or cda:playingEntity/cda:name[string-length(normalize-space()) &gt; 2]'>
+     Error: A HITSP/C32 Subscriber Information data element shall contain a  non-empty C32 Subscriber Name element.
+     See Table 2.2.1.6-2.
+   </assert>
+
+   <assert test='cda:playingEntity/sdtc:birthTime'>
+     Error: A HITSP/C32 Subscriber Information data element shall contain a  C32 Subscriber Date of Birth element (sdtc:birthTime). 
+     NOTE: The sdtc:birthTime represents an extension to HL7 CDA Release 2.0.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.14.
+   </assert>
+
+ </rule>
+
+</pattern>
+
+   
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.5-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without tempateIds -->
+
+ <!-- Set New context for Providers without templateIds -->
+
+  <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]'>
+
+   <!-- Payer -->
+   <assert test='cda:performer/cda:assignedEntity'>
+     Constraint Violation: A HITSP/C32 Payment Providers data element shall contain a  C32 Payer element.
+     See Table 2.2.1.6-2
+   </assert>
+
+   <assert test='cda:performer/cda:assignedEntity/cda:code'>
+     Constraint Violation: A HITSP/C32 Payment Providers data element shall contain a C32 Financial Responsibility Party Type element.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.11 rule C32-[75].
+   </assert>
+
+   <assert test='cda:performer/cda:assignedEntity/cda:code[@code and @codeSystem="2.16.840.1.113883.5.110"]'>
+     Constraint Violation: A HITSP/C32 Financial Responsibility Party Type element shall have a code attribute that contains a value from the HL7 RoleClassRelationshipFormal vocabulary (2.16.840.1.113883.5.110). CHECK list.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.11 rule C32-[76].
+   </assert>
+
+   <assert test='not(cda:code[@code="PP"]) or cda:performer/cda:assignedEntity/cda:code[@code="GUAR" or @code="PAT"]'>
+     Constraint Violation: If the C32 Health Insurance Type of the encompassing C32 Payment Provider (i.e. cda:code) is PP, then the C32 Financial Responsibility Party Type code attribute shall be set to GUAR or PAT to indicate a Guarantor or self-paying patient, respectively.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.11 rule C32-[77].
+   </assert>
+
+   <assert test='not(cda:code) or cda:code[@code="PP"] or cda:performer/cda:assignedEntity/cda:code[@code="PAYOR"]'>
+     Constraint Violation: If the C32 Health Insurance Type of the encompassing C32 Payment Provider (i.e. cda:code) is anything other than PP, then the C32 Financial Responsibility Party Type code attribute shall be set to PAYOR.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.11 rule C32-[77].
+   </assert>
+
+ </rule>
+
+
+ <!-- New context for Patient Information / Patient -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:participant[@typeCode="COV"]/cda:participantRole[@classCode="PAT"]'>
+
+   <assert test='cda:code'>
+     Constraint Violation: A HITSP/C32 Subscribers Patient data element shall contain a C32 Relationship to Subscriber element (i.e. cda:code).
+     See Table 2.2.1.6-2
+   </assert>
+
+   <assert test='cda:code[@code and @codeSystem="2.16.840.1.113883.5.111"]'>
+     Constraint Violation: A HITSP/C32 Subscribers Patient data element shall contain a C32 Relationship to Subscriber element (i.e. cda:code) with the code attribute taken from the HL7 CoverageRoleType vocabulary (2.16.840.1.113883.5.111). CHECK list.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.8.
+   </assert>
+
+   <assert test='cda:playingEntity/cda:name'>
+     Constraint Violation: A HITSP/C32 Subscribers Patient data element shall contain a C32 Patient Name element. If this element is empty, then the name shall be assumed equal to the patient name recorded in cda:recordTarget.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.9.
+   </assert>
+
+   <assert test='cda:playingEntity/sdtc:birthTime'>
+     Constraint Violation: A HITSP/C32 Subscribers Patient data element shall contain a C32 Patient Date of Birth element (sdtc:birthTime). If this element is empty, then the date of birth shall be assumed equal to the patient date of birth recorded in cda:recordTarget.   
+     NOTE: The sdtc:birthTime represents an extension to HL7 CDA Release 2.0.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.10.
+   </assert>
+
+ </rule>
+
+
+ <!-- New context for Subscriber Information / Subscriber -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:participant[@typeCode="HLD"]/cda:participantRole'>
+
+   <assert test='cda:id/@root and cda:id/@extension'>
+     Constraint Violation: A HITSP/C32 Subscriber Information data element shall contain a C32 Subscriber ID element with both root and extension attributes. The root attribute (OID or GUID) identifies the assigning authority of the extension attribute. The extension attribute is the subscriber identification number.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.13.
+   </assert>
+
+   <assert test='cda:addr/*'>
+     Constraint Violation: A HITSP/C32 Subscriber Information data element shall contain a non-empty C32 addr element. The address should follow the C32 address format.
+     See Table 2.2.1.6-2 and Section 2.2.1.1.2.
+   </assert>
+
+   <assert test='cda:playingEntity/cda:name/* or cda:playingEntity/cda:name[string-length(normalize-space()) &gt; 2]'>
+     Constraint Violation: A HITSP/C32 Subscriber Information data element shall contain a  non-empty C32 Subscriber Name element.
+     See Table 2.2.1.6-2.
+   </assert>
+
+   <assert test='cda:playingEntity/sdtc:birthTime'>
+     Constraint Violation: A HITSP/C32 Subscriber Information data element shall contain a  C32 Subscriber Date of Birth element (sdtc:birthTime). 
+     NOTE: The sdtc:birthTime represents an extension to HL7 CDA Release 2.0.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.14.
+   </assert>
+
+ </rule>
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+
+   
+
+<!-- Warnings Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.5-warning'>
+
+
+ <!-- Base context Payment Provider -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]'>
+
+   <!-- Health Insurance Type -->
+   <assert test='cda:code[@nullFlavor or (@code and @codeSystem="2.16.840.1.113883.6.255.1336")]'>
+     Warning: A HITSP/C32 Payment Provider element should contain a Health Insurance Type element (cda:code). The code attribute value shall come from the X12 vocabulary (2.16.840.1.113883.6.255.1336) for Insurance Type Code (X12 Data Element 1336), as restricted by the X12N 271 Transaction. CHECK list. The value "PP" shall be used to indicate self-pay or payment by a guarantor. Any other value indicates a Financial Responsibility Party Type of PAYOR.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.3 rules C32-[58], C32-[59] and C32-[60].
+   </assert>
+
+ </rule>
+
+
+ <!-- New context for Financial Responsibility Party Type of PAYOR -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:performer/cda:assignedEntity[cda:code/@code="PAYOR"]'>
+
+   <!-- Health Plan Insurance Information Source ID -->
+   <assert test='cda:id'>
+     Warning: A HITSP/C32 Payment Provider that is of type PAYOR should contain a Health Plan Insurance Information Source ID (cda:id) in its Payer element. The information source identifier (cda:id) corresponds to the RxBIN and RxPCN fields found on pharmacy benefit cards. The id root attribute should be the OID for RxBIN (2.16.840.1.113883.3.88.3.1) and the extension attribute should be the numeric extension to RxBIN for RxPCN. The OID for RxPCN is RxBIN plus the numeric extension.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.4.
+   </assert>
+
+   <!-- Health Plan Insurance Information Source Address -->
+   <assert test='cda:addr'>
+     Warning: A HITSP/C32 Payment Provider that is of type PAYOR should contain a Health Plan Insurance Information Source Address element in its Payer element. The address should follow the C32 address format.
+     See Table 2.2.1.6-2 and Section 2.2.1.1.2.
+   </assert>
+
+   <!-- Health Plan Insurance Information Source telecom -->
+   <assert test='cda:telecom[@nullflavor or @value]'>
+     Warning: A HITSP/C32 Payment Provider that is of type PAYOR should contain a non-empty Health Plan Insurance Information Source Phone/Email/URL element in its Payer element. This element should follow the C32 format for telecommunications information.
+     See Table 2.2.1.6-2 and Section 2.2.1.1.3.
+   </assert>
+
+   <!-- Health Plan Insurance Information Source Name -->
+   <assert test='cda:representedOrganization/cda:name'>
+     Warning: A HITSP/C32 Payment Provider that is of type PAYOR should contain a Health Plan Insurance Information Source Name in its Payer Represented Organization element.
+     See Table 2.2.1.6-2..
+   </assert>
+
+   <!-- Subscriber Information -->
+   <assert test='../../cda:participant[@typeCode="HLD"]'>
+     Warning: A HITSP/C32 Payment Provider that is of type PAYOR should contain a Subscriber Information element. If this element is not present, then the subscriber may be assumed to be the patient recorded in cda:recordTarget.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.12.
+   </assert>
+
+   <!-- Patient Information -->
+   <assert test='not(../../cda:participant[@typeCode="HLD"]) or ../../cda:participant[@typeCode="COV"]'>
+     Warning: If a HITSP/C32 Payment Provider that is of type PAYOR has a Subscriber Information data element, then the Payment Provider element should contain a Patient Information element. If this element is not present, then the Patient may be assumed to be the patient recorded in cda:recordTarget.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.5.
+   </assert>
+
+   <!-- Health Plan -->
+   <assert test='../../cda:entryRelationship[@typeCode="REFR"]/cda:act[@classCode="ACT" and @moodCode="DEF"]'>
+     Warning: A HITSP/C32 Payment Provider that is of type PAYOR should contain a Health Plan element.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.15.
+   </assert>
+
+   <!-- Health Plan Name -->
+   <assert test='../../cda:entryRelationship[@typeCode="REFR"]/cda:act[@classCode="ACT" and @moodCode="DEF"]/cda:text'>
+     Warning: A HITSP/C32 Payment Provider that is of type PAYOR should contain a Health Plan Name element.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.16.
+   </assert>
+
+ </rule>
+
+
+ <!-- New context for Financial Responsibility Party Type of GUAR -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:performer[cda:assignedEntity/cda:code/@code="GUAR"]'>
+
+   <assert test='cda:time'>
+     Warning: A HITSP/C32 Payment Provider that is of type GUAR should contain a C32 Effective Date of Financial Responsibility element in its Guarantor Information element. 
+     See Table 2.2.1.6-2
+   </assert>
+
+   <assert test='cda:assignedEntity/cda:addr'>
+     Warning: A HITSP/C32 Payment Provider that is of type GUAR should contain a C32 Financial Responsibility Party Address element in its Guarantor Information element. 
+     See Table 2.2.1.6-2 and Section 2.2.1.1.2.
+   </assert>
+
+   <assert test='cda:assignedEntity/cda:telecom'>
+     Warning: A HITSP/C32 Payment Provider that is of type GUAR should contain a C32 Financial Responsibility Party telecom element in its Guarantor Information element. 
+     See Table 2.2.1.6-2 and Section 2.2.1.1.3.
+   </assert>
+
+   <assert test='cda:assignedEntity/cda:assignedPerson/cda:name | cda:assignedEntity/cda:representedOrganization/cda:name'>
+     Warning: A HITSP/C32 Payment Provider that is of type GUAR should contain a C32 Financial Responsibility Party Name element in its Guarantor Information element. 
+     See Table 2.2.1.6-2 and Section 2.2.1.1.1.
+   </assert>
+
+ </rule>
+
+
+ <!-- New context for Patient Information / Patient -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:participant[@typeCode="COV"]/cda:participantRole[@classCode="PAT"]'> 
+
+   <!-- Health Plan Coverage Dates -->
+   <assert test='../cda:time'>
+     Warning: A HITSP/C32 Patient Information element should contain a Health Plan Coverage Dates element. The low attribute indicates the start date and the high attribute, if present, indicates the stop date.
+     See Table 2.2.1.6-2 and Section 2.2.1.6.6
+   </assert>
+
+ </rule>
+
+
+   <!-- New Context for Subscriber Information / Subscriber -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:participant[@typeCode="HLD"]/cda:participantRole'>
+
+   <assert test='cda:telecom'>
+     Warning: A HITSP/C32 Subscriber Information element should contain a Subscriber Phone/email/URL element.
+     See Table 2.2.1.6-2
+   </assert>
+
+ </rule>
+
+</pattern>
+
+   
+
+<!-- Notes Pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.5-note'>
+
+
+ <!-- New context for Financial Responsibility Party Type of PAYOR -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:performer/cda:assignedEntity[cda:code/@code="PAYOR"]'>
+
+   <!-- Group Number -->
+   <assert test='../../cda:id[@extension and @root]'>
+     Note: A HITSP/C32 Payment Provider that is of type PAYOR may contain a Group Number element (cda:id) in its ancestor Payment Provider act. The cda:id should have both root and extension attributes. The root attribute (OID or GUID) identifies the assigning authority for the extension. The extension attribute identifies the group or contract number of the Payment Provider element.
+     See Table 2.2.1.6-2 and all five rules of Section 2.2.1.6.2.
+   </assert>
+
+ </rule>
+
+
+ <!-- New context for Financial Responsibility Party Type of GUAR -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:performer[cda:assignedEntity/cda:code/@code="GUAR"]'>
+
+ </rule>
+
+
+ <!-- New context for Patient Information / Patient -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:participant[@typeCode="COV"]/cda:participantRole[@classCode="PAT"]'>
+
+ </rule>
+
+
+   <!-- New Context for Subscriber Information / Subscriber -->
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.9"]
+             and ancestor::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.20"]
+             and self::cda:act[cda:templateId/@root="2.16.840.1.113883.10.20.1.26"]]/cda:participant[@typeCode="HLD"]/cda:participantRole'>
+
+ </rule>
+
+</pattern>
+
+

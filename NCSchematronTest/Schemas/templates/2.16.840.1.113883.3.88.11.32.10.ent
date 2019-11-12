@@ -1,0 +1,97 @@
+<!-- Template_2.16.840.1.113883.3.88.11.32.10 -->
+<!-- HITSP/C32 Medications Module, Medication Information, Type of Medication data element -->
+
+
+<!-- Errors pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.10-errors'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.10"]'>
+
+   <!-- Verify that templateId is used on the appropriate type of object -->
+   <assert test='ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+             and (ancestor::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"] 
+              or ancestor::cda:supply[cda:templateId/@root="2.16.840.1.113883.10.20.1.34"])
+             and parent::cda:entryRelationship[@typeCode="SUBJ"]
+             and self::cda:observation'>
+     Error: The HITSP/C32 templateId for Type of Medication (2.16.840.1.113883.3.88.11.32.10) is in the wrong location. 
+A HITSP/C32 Type of Medication data element shall be represented as an observation entry under an entryRelationship of type subject (SUBJ) in a CCD substance Administration (2.16.840.1.113883.10.20.1.24) or CCD supply (2.16.840.1.113883.10.20.1.34) in a CCD Medications section (2.16.840.1.113883.10.20.1.8). The C32 templateId for Type of Medication may optionally be included on the CDA observation element.
+     See Table 2.2.1.9-2 and Section 2.2.1.9.11 rules C32-[125] and C32-[126].
+   </assert>
+   
+   <!-- Rule C32-[128] -->
+   <assert test='cda:code'>
+     Error: A C32 Type of Medication data element shall have a code element that represents the kind of medication actually or intended to be administered or supplied. 
+     See Section 2.2.1.9.11 rule C32-[128].
+   </assert>
+   
+   <!-- Rule C32-[129] -->
+   <assert test='cda:code[@codeSystem="2.16.840.1.113883.6.96" and (@code="329505003" or @code="73639000")]'>
+     Error: A C32 Type of Medication data element shall have a code element with a code attribute taken from SNOMED CT (2.16.840.1.113883.6.96) and with the code restricted to Over the counter products (329505003) or prescription drug (73639000). 
+     See Section 2.2.1.9.11 rule C32-[129].
+   </assert>
+
+ </rule>
+
+</pattern>
+   
+
+
+<!-- Warnings pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.10-violation'>
+
+<!-- Rules that would be Errors if constraints are applied without tempateIds -->
+
+ <!-- Set New context without templateIds -->
+
+ <!-- No Changes necessary - Type of Medication is only Required-if-Known(R2) -->
+
+<!-- End of Rules that would be Errors if constraints are applied without tempateIds -->
+
+</pattern>
+   
+
+
+<!-- Warnings pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.10-warning'>
+
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+              and self::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"]]'>
+     
+   <assert test='cda:entryRelationship[@typeCode="SUBJ"]/cda:observation/cda:code[@codeSystem="2.16.840.1.113883.6.96" and (@code="329505003" or @code="73639000")]'>
+     Warning: A HITSP/C32 Medications - Administration Information data element (i.e. cda:substanceAdministration) should contain a C32 Type of Medication data element (i.e. a SUBJ observation with a specific SNOMED code) to indicate whether the medication is a prescription drug (SNOMED 73639000) or an over the counter medication (SNOMED 329505003).  
+     See Section 2.2.1.9 Table 2.2.1.9-2 item 8.19 and Section 2.2.1.9.11.
+   </assert>
+
+ </rule>
+
+
+ <rule context='*[ancestor::cda:section[cda:templateId/@root="2.16.840.1.113883.10.20.1.8"]
+              and (ancestor::cda:substanceAdministration[cda:templateId/@root="2.16.840.1.113883.10.20.1.24"] 
+                   or ancestor::cda:supply[cda:templateId/@root="2.16.840.1.113883.10.20.1.34"]) 
+              and parent::cda:entryRelationship[@typeCode="SUBJ"]
+              and self::cda:observation[cda:code[@codeSystem="2.16.840.1.113883.6.96" and (@code="329505003" or @code="73639000")]]]'>
+   
+   <!-- Rule C32-[127] -->
+   <assert test='cda:templateId/@root="2.16.840.1.113883.3.88.11.32.10"'>
+     Warning: If a HITSP/C32 Medications - Administration Information data element contains a CDA SUBJ observation with a SNOMED CT code for prescription drug (73639000) or Over the counter product (329505003), then the CDA observation should be identified as a C32 Type of Medication data element by including a cda:templateId with the root attribute set to "2.16.840.1.113883.3.88.11.32.10".  
+     See Section 2.2.1.9.11 rule C32-[127].
+   </assert>
+
+ </rule>
+
+</pattern>
+   
+
+
+<!-- Notes pattern -->
+
+<pattern id='p-2.16.840.1.113883.3.88.11.32.10-note'>
+
+ <rule context='*[cda:templateId/@root="2.16.840.1.113883.3.88.11.32.10"]'>
+ </rule>
+
+</pattern>
