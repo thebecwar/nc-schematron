@@ -36,7 +36,7 @@ namespace NCSchematron
         }
         public ValidationResult ValidateXml(string xml)
         {
-            using (Stream stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(xml)))
+            using (Stream stream = new MemoryStream(System.Text.Encoding.Unicode.GetBytes(xml)))
             {
                 return ValidateStream(stream);
             }
