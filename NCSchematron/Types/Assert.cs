@@ -96,7 +96,7 @@ namespace NCSchematron.Types
 
             var result = navigator.Evaluate(executionExpression);
 
-            bool ok = false;
+            bool ok;
             switch (executionExpression.ReturnType)
             {
                 case XPathResultType.Boolean:

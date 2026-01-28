@@ -30,6 +30,9 @@ namespace NCSchematron.Types
         [XmlAttribute(AttributeName = "id")]
         public string Id { get; set; }
 
+        [XmlAttribute(AttributeName = "flag")]
+        public string Flag { get; set; }
+
         // linkable
         #region Linkable
 

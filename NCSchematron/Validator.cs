@@ -36,7 +36,7 @@ namespace NCSchematron
         }
         public ValidationResult ValidateXml(string xml)
         {
-            using (Stream stream = new MemoryStream(System.Text.Encoding.Unicode.GetBytes(xml)))
+            using (Stream stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(xml)))
             {
                 return ValidateStream(stream);
             }
@@ -44,7 +44,10 @@ namespace NCSchematron
         public ValidationResult ValidateStream(Stream stream)
         {
             XPathDocument doc = new XPathDocument(stream);
-
+            return ValidateStream(doc);
+        }
+        public ValidationResult ValidateStream(XPathDocument doc)
+        {
             if (this.Schema.Phases != null)
             {
                 var result = this.Schema.EvaluatePhase(doc.CreateNavigator());
@@ -56,6 +59,5 @@ namespace NCSchematron
                 return new ValidationResult(result);
             }
         }
-
     }
 }
